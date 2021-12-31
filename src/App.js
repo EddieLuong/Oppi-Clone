@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LogIn from "./Component/LogIn.tsx";
-import Polllist from "./Component/Polllist.tsx";
+import Polllist from "./Component/Polllist";
 
 function App() {
   return (
