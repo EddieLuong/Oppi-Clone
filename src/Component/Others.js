@@ -1,6 +1,7 @@
 const ApiSignIn = "https://dev.oppi.live/api/admin/v1/auth/signin";
 const accessToken = localStorage.getItem("AdminAccessToken");
-
+const ApiLogOut = "https://dev.oppi.live/api/admin/v1/auth/signout";
+const ApiDelete = "https://dev.oppi.live/api/admin/v1/polls";
 const columns = [
   { title: "Poll Name", field: "title" },
   { title: "Poll Question", field: "question" },
@@ -40,4 +41,12 @@ const handleDataToTable = (polllistArray) => {
     };
   });
 };
-export { formatDate, handleDataToTable, ApiSignIn, columns, accessToken };
+export {
+  formatDate,
+  handleDataToTable,
+  ApiSignIn,
+  columns,
+  accessToken,
+  ApiLogOut,
+  ApiDelete,
+};

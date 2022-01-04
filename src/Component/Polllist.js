@@ -9,48 +9,85 @@ import {
   DialogActions,
   Pagination,
 } from "@mui/material";
+import {
+  handleDataToTable,
+  columns,
+  accessToken,
+  ApiLogOut,
+  ApiDelete,
+} from "./Others";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MaterialTable from "material-table";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { handleDataToTable, columns, accessToken } from "./Others";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Polllist() {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [query, setQuery] = useState(0);
-  const [open, setOpen] = useState(false);
+  const [openPopper, setOpenPopper] = useState(false);
   const [isOpenDialogLogout, setIsOpenDialogLogout] = useState(false);
   const [isOpenDialogDelete, setIsOpenDialogDelete] = useState(false);
   const [dataPolllistTable, setDataPolllistTable] = useState();
-  const [currenPage, setCurrenPage] = useState(1);
-  const [countPage, setCountPage] = useState(0);
-  const navigate = useNavigate();
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [idPollClicked, setIdPollClicked] = useState();
+  const [sameQuery, setSameQuery] = useState(false); //use to re-render polllist table when delete
+  const [countPage, setCountPage] = useState();
+  //Handle Click event Oppi Admin
   const handleClick = (event) => {
-    setOpen((prevValue) => !prevValue);
+    setOpenPopper((prevValue) => !prevValue);
     setAnchorEl(event.currentTarget);
   };
+
+  //Open/close Dialog Log out
   const handleOpenDialog = () => {
     setIsOpenDialogLogout(true);
   };
   const handleCloseDialog = () => {
     setIsOpenDialogLogout(false);
   };
+
+  //input: data get from API, out put: data in a row of Polllist Table
   const getPolllistData = (polllistArray) => {
     const rows = handleDataToTable(polllistArray);
     setDataPolllistTable(rows);
   };
+  //Change page in Pagination: reset current page index and re-render polllist
   const handleChangePage = (page) => {
-    setCurrenPage(page);
+    setCurrentPage(page);
     setQuery((page - 1) * 10);
   };
+  //Handle Logout
   const handleLogOut = () => {
     localStorage.removeItem("AdminAccessToken");
     navigate("/");
+    axios
+      .post(ApiLogOut)
+      .then((respon) => console.log(respon))
+      .catch((e) => console.log(e));
   };
+  //Handle when click Cancel/click into space
+  const handleCloseDialogDelete = () => {
+    setIsOpenDialogDelete((prev) => !prev);
+  };
+  //Delete Poll
+  const handleDeletePoll = () => {
+    axios
+      .delete(`${ApiDelete}/${idPollClicked}`, {
+        headers: {
+          Authorization: `Bearer  ${accessToken}`,
+        },
+      })
+      .then((respon) => console.log(respon))
+      .catch((err) => console.log(err));
+
+    handleCloseDialogDelete();
+    setSameQuery((prev) => !prev); //Re-render after delete
+  };
+
   useEffect(() => {
     axios
       .get(
@@ -70,16 +107,18 @@ export default function Polllist() {
           setCountPage((totalPage - (totalPage % 10)) / 10 + 1);
         }
       });
-  }, [query]);
+  }, [query, sameQuery]);
   return (
     <div className="pollist">
+      {/* Log out Section */}
+
       <Button endIcon={<KeyboardArrowDownIcon />} onClick={handleClick}>
         Oppi admin
       </Button>
       <Popper
         anchorEl={anchorEl}
         onClick={handleOpenDialog}
-        open={open}
+        open={openPopper}
         style={{ m: "50px" }}
       >
         <Box
@@ -119,8 +158,9 @@ export default function Polllist() {
         </DialogActions>
       </Dialog>
 
+      {/* Polllist Table */}
+
       <MaterialTable
-        style={{ zIndex: -1 }}
         columns={columns}
         data={dataPolllistTable}
         options={{ toolbar: false, paging: false, actionsColumnIndex: -1 }}
@@ -128,14 +168,17 @@ export default function Polllist() {
           {
             icon: "delete",
             tooltip: "Delete User",
-            onClick: (rowData) => console.log(rowData),
+            onClick: (event, data) => {
+              alert(data);
+            },
           },
         ]}
         components={{
-          Action: () => (
+          Action: (props) => (
             <div
-              onClick={(event) => {
+              onClick={() => {
                 setIsOpenDialogDelete((prev) => !prev);
+                setIdPollClicked(props.data.id);
               }}
             >
               <DeleteIcon />
@@ -144,28 +187,24 @@ export default function Polllist() {
           ),
         }}
       ></MaterialTable>
-      <Dialog open={isOpenDialogDelete}>
-        <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
-        </DialogTitle>
+      <Dialog open={isOpenDialogDelete} onClose={handleCloseDialogDelete}>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
+            Are you sure you would like to delete this poll?
+            <br />
+            Once deleted, it cannot be retrieved.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsOpenDialogDelete((prev) => !prev)}>
-            Disagree
-          </Button>
-          <Button
-            onClick={() => setIsOpenDialogDelete((prev) => !prev)}
-            autoFocus
-          >
-            Agree
+          <Button onClick={handleCloseDialogDelete}>Keep Poll</Button>
+          <Button onClick={handleDeletePoll} autoFocus>
+            Delete
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* //Pagination */}
+
       <Pagination
         count={countPage}
         color="primary"
@@ -174,7 +213,7 @@ export default function Polllist() {
         shape="rounded"
         boundaryCount={3}
         siblingCount={2}
-        page={currenPage}
+        page={currentPage}
         onChange={(event, page) => handleChangePage(page)}
       />
     </div>
