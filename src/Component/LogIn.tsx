@@ -1,5 +1,5 @@
 import { TextField,Typography,Button,Link} from "@material-ui/core";
-import { useStyles } from "./CSS/styled";
+import { useStyles } from "./StyledComponent/styled";
 import { useForm, Controller} from "react-hook-form";
 import { useState } from "react";
 import * as Yup from "yup";
@@ -7,7 +7,7 @@ import axios  from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {useNavigate} from "react-router-dom"
 import FormHelperText from '@mui/material/FormHelperText'
-
+import {ApiSignIn} from "./Others"
 interface ILoginInputs {
   email: string;
   password: string;
@@ -17,7 +17,6 @@ export default function LogIn() {
 
   const classes = useStyles();
   const [errorMessage, setErrorMessage] = useState('');
-  const ApiSignIn = "https://dev.oppi.live/api/admin/v1/auth/signin";
   let navigate = useNavigate();
 
   const schema = Yup.object().shape({
@@ -45,9 +44,9 @@ export default function LogIn() {
             if(e.response.data.message=== "Incorrect username or password") {
               setErrorMessage("Email or password is invalid, please try again.")
             }
-            else
-            setErrorMessage(' ')
-
+            else{
+              setErrorMessage(' ')
+            }
         });
   };
 
