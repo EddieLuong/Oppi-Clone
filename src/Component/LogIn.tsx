@@ -36,8 +36,8 @@ export default function LogIn() {
       axios.post(ApiSignIn, data)
           .then((res)=>{
             setErrorMessage("");
-            navigate("/polllist");
-            localStorage.setItem("AdminAccessToken",res.data.token)
+            sessionStorage.setItem("AdminAccessToken",res.data.token);
+            navigate("/polllist")
           })
           .catch((e) => {
             console.log("Fail to Sign In");

@@ -41,7 +41,6 @@ export default function Polllist() {
     setOpenPopper((prevValue) => !prevValue);
     setAnchorEl(event.currentTarget);
   };
-
   //Open/close Dialog Log out
   const handleOpenDialog = () => {
     setIsOpenDialogLogout(true);
@@ -62,7 +61,7 @@ export default function Polllist() {
   };
   //Handle Logout
   const handleLogOut = () => {
-    localStorage.removeItem("AdminAccessToken");
+    sessionStorage.removeItem("AdminAccessToken");
     navigate("/");
     axios
       .post(ApiLogOut)
@@ -86,6 +85,13 @@ export default function Polllist() {
 
     handleCloseDialogDelete();
     setSameQuery((prev) => !prev); //Re-render after delete
+  };
+
+  //Show poll detail when click on row
+  const onRowClick = (event, rowData) => {
+    event.stopPropagation();
+    sessionStorage.setItem("idPollDetail", rowData.id);
+    navigate("/polldetail");
   };
 
   useEffect(() => {
@@ -161,8 +167,10 @@ export default function Polllist() {
       {/* Polllist Table */}
 
       <MaterialTable
+        style={{ marginTop: 50 }}
         columns={columns}
         data={dataPolllistTable}
+        onRowClick={onRowClick}
         options={{ toolbar: false, paging: false, actionsColumnIndex: -1 }}
         actions={[
           {
@@ -176,9 +184,10 @@ export default function Polllist() {
         components={{
           Action: (props) => (
             <div
-              onClick={() => {
+              onClick={(event) => {
                 setIsOpenDialogDelete((prev) => !prev);
                 setIdPollClicked(props.data.id);
+                event.stopPropagation();
               }}
             >
               <DeleteIcon />
