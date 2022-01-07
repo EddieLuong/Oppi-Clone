@@ -15,7 +15,7 @@ import {
   accessToken,
   ApiLogOut,
   ApiDelete,
-} from "./Others";
+} from "./Utils";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MaterialTable from "material-table";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -23,7 +23,7 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { StyledTable, CardTable, Wrapper } from "./styles/styled";
 export default function Polllist() {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -117,7 +117,6 @@ export default function Polllist() {
   return (
     <div className="pollist">
       {/* Log out Section */}
-
       <Button endIcon={<KeyboardArrowDownIcon />} onClick={handleClick}>
         Oppi admin
       </Button>
@@ -165,66 +164,68 @@ export default function Polllist() {
       </Dialog>
 
       {/* Polllist Table */}
+      <Wrapper>
+        <CardTable>
+          <StyledTable
+            style={{ marginTop: 50 }}
+            columns={columns}
+            data={dataPolllistTable}
+            onRowClick={onRowClick}
+            options={{ toolbar: false, paging: false, actionsColumnIndex: -1 }}
+            actions={[
+              {
+                icon: "delete",
+                tooltip: "Delete User",
+                onClick: (event, data) => {
+                  alert(data);
+                },
+              },
+            ]}
+            components={{
+              Action: (props) => (
+                <div
+                  onClick={(event) => {
+                    setIsOpenDialogDelete((prev) => !prev);
+                    setIdPollClicked(props.data.id);
+                    event.stopPropagation();
+                  }}
+                >
+                  <DeleteIcon />
+                  <p>Delete</p>
+                </div>
+              ),
+            }}
+          ></StyledTable>
+          {/* //Pagination */}
+          <Pagination
+            count={countPage}
+            color="primary"
+            variant="outlined"
+            size="large"
+            shape="rounded"
+            boundaryCount={3}
+            siblingCount={2}
+            page={currentPage}
+            onChange={(event, page) => handleChangePage(page)}
+          />
+        </CardTable>
 
-      <MaterialTable
-        style={{ marginTop: 50 }}
-        columns={columns}
-        data={dataPolllistTable}
-        onRowClick={onRowClick}
-        options={{ toolbar: false, paging: false, actionsColumnIndex: -1 }}
-        actions={[
-          {
-            icon: "delete",
-            tooltip: "Delete User",
-            onClick: (event, data) => {
-              alert(data);
-            },
-          },
-        ]}
-        components={{
-          Action: (props) => (
-            <div
-              onClick={(event) => {
-                setIsOpenDialogDelete((prev) => !prev);
-                setIdPollClicked(props.data.id);
-                event.stopPropagation();
-              }}
-            >
-              <DeleteIcon />
-              <p>Delete</p>
-            </div>
-          ),
-        }}
-      ></MaterialTable>
-      <Dialog open={isOpenDialogDelete} onClose={handleCloseDialogDelete}>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you would like to delete this poll?
-            <br />
-            Once deleted, it cannot be retrieved.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialogDelete}>Keep Poll</Button>
-          <Button onClick={handleDeletePoll} autoFocus>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* //Pagination */}
-
-      <Pagination
-        count={countPage}
-        color="primary"
-        variant="outlined"
-        size="large"
-        shape="rounded"
-        boundaryCount={3}
-        siblingCount={2}
-        page={currentPage}
-        onChange={(event, page) => handleChangePage(page)}
-      />
+        <Dialog open={isOpenDialogDelete} onClose={handleCloseDialogDelete}>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you would like to delete this poll?
+              <br />
+              Once deleted, it cannot be retrieved.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialogDelete}>Keep Poll</Button>
+            <Button onClick={handleDeletePoll} autoFocus>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Wrapper>
     </div>
   );
 }

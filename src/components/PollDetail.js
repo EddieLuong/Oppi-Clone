@@ -1,4 +1,4 @@
-import { ApiPollDetail, accessToken, formatDate } from "./Others";
+import { ApiPollDetail, accessToken, formatDate } from "./Utils";
 import { TextField, Typography, Button } from "@material-ui/core";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";

@@ -1,5 +1,4 @@
-import { TextField,Typography,Button,Link} from "@material-ui/core";
-import { useStyles } from "./StyledComponent/styled";
+import {Link} from "@material-ui/core";
 import { useForm, Controller} from "react-hook-form";
 import { useState } from "react";
 import * as Yup from "yup";
@@ -7,7 +6,9 @@ import axios  from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {useNavigate} from "react-router-dom"
 import FormHelperText from '@mui/material/FormHelperText'
-import {ApiSignIn} from "./Others"
+import {ApiSignIn} from "./Utils"
+import {Wrapper,Card,MuiInput,MuiButton} from "./styles/styled"
+
 interface ILoginInputs {
   email: string;
   password: string;
@@ -15,7 +16,6 @@ interface ILoginInputs {
 
 export default function LogIn() {
 
-  const classes = useStyles();
   const [errorMessage, setErrorMessage] = useState('');
   let navigate = useNavigate();
 
@@ -56,8 +56,9 @@ export default function LogIn() {
   };
 
   return (
-    <div>
-      <Typography variant="h3" component="h2">Sign In</Typography>
+    <Wrapper>
+      <Card>
+        <p className="title">Sign In</p>
       <form noValidate onSubmit={form.handleSubmit(onSubmit)}>
         <div className="emailaddress">
           <label htmlFor="email">EMAIL ADDRESS</label>
@@ -65,7 +66,7 @@ export default function LogIn() {
             name="email"
             control={form.control}
             render={({ field: { onChange }, fieldState: { error } }) => (
-                <TextField
+                <MuiInput
                   onChange={onChange}
                   name="email"
                   placeholder="Email Address"
@@ -78,12 +79,12 @@ export default function LogIn() {
           />
         </div>
         <div className="password">
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">PASSWORD</label>
           <Controller
             name="password"
             control={form.control}
             render={({ field: { onChange }, fieldState: { error } }) => (
-                <TextField
+                <MuiInput
                   onChange={onChange}
                   name="password"
                   placeholder="Password"
@@ -96,12 +97,16 @@ export default function LogIn() {
           />
         </div>
         <FormHelperText error>{errorMessage}</FormHelperText>
-          <Button type="submit"  children={"Sign In"} className={classes.button}/>
-          <Link href="#" underline="none">{"Forgot Password"}</Link>
-          <Link href="#" underline="hover">{"Create new acount"}</Link>
-
+          <MuiButton type="submit" >
+          Sign In
+          </MuiButton>
       </form>
-    </div>
+      <div className="footerSignIn">
+        <Link href="#" underline="none">{"Forgot Password"}</Link>
+        <Link style={{color:"rgb(33, 172, 250)"}} href="#" underline="hover">{"Create new acount"}</Link>
+      </div>
+      </Card>
+    </Wrapper>
   );
 }
 
