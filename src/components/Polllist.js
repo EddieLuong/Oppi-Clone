@@ -15,7 +15,7 @@ import {
   accessToken,
   ApiLogOut,
   ApiDelete,
-} from "./Others";
+} from "./Utils";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MaterialTable from "material-table";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -23,33 +23,32 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { StyledTable, CardTable, Wrapper } from "./styles/styled";
 
 export default function Polllist() {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [query, setQuery] = useState(0);
   const [openPopper, setOpenPopper] = useState(false);
-  const [isOpenDialogLogout, setIsOpenDialogLogout] = useState(false);
-  const [isOpenDialogDelete, setIsOpenDialogDelete] = useState(false);
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [dataPolllistTable, setDataPolllistTable] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const [idPollClicked, setIdPollClicked] = useState();
+  const [idPollClicked, setIdPollClicked] = useState(0);
   const [sameQuery, setSameQuery] = useState(false); //use to re-render polllist table when delete
-  const [countPage, setCountPage] = useState();
-  //Handle Click event Oppi Admin
+  const [countPage, setCountPage] = useState(0);
+
+  //handleClick Oppi Admin to Logout
   const handleClick = (event) => {
     setOpenPopper((prevValue) => !prevValue);
     setAnchorEl(event.currentTarget);
   };
-  //Open/close Dialog Log out
-  const handleOpenDialog = () => {
-    setIsOpenDialogLogout(true);
-  };
-  const handleCloseDialog = () => {
-    setIsOpenDialogLogout(false);
+  //Show/hide Dialog Log out
+  const handleShowHideLogoutDialog = () => {
+    setIsLogoutDialogOpen((prev) => !prev);
   };
 
-  //input: data get from API, out put: data in a row of Polllist Table
+  //input: data get from API, out put: data in rows of Polllist Table
   const getPolllistData = (polllistArray) => {
     const rows = handleDataToTable(polllistArray);
     setDataPolllistTable(rows);
@@ -65,12 +64,12 @@ export default function Polllist() {
     navigate("/");
     axios
       .post(ApiLogOut)
-      .then((respon) => console.log(respon))
+      .then((respon) => console.log("Log out Success!!!"))
       .catch((e) => console.log(e));
   };
   //Handle when click Cancel/click into space
   const handleCloseDialogDelete = () => {
-    setIsOpenDialogDelete((prev) => !prev);
+    setIsDeleteDialogOpen((prev) => !prev);
   };
   //Delete Poll
   const handleDeletePoll = () => {
@@ -117,13 +116,12 @@ export default function Polllist() {
   return (
     <div className="pollist">
       {/* Log out Section */}
-
       <Button endIcon={<KeyboardArrowDownIcon />} onClick={handleClick}>
         Oppi admin
       </Button>
       <Popper
         anchorEl={anchorEl}
-        onClick={handleOpenDialog}
+        onClick={handleShowHideLogoutDialog}
         open={openPopper}
         style={{ m: "50px" }}
       >
@@ -142,12 +140,12 @@ export default function Polllist() {
           Log out
         </Box>
       </Popper>
-      <Dialog open={isOpenDialogLogout} onClose={handleCloseDialog}>
+      <Dialog open={isLogoutDialogOpen} onClose={handleShowHideLogoutDialog}>
         <DialogTitle id="alert-dialog-title">
           {"Log Out"}
           <CloseRoundedIcon
             style={{ cursor: "pointer" }}
-            onClick={handleCloseDialog}
+            onClick={handleShowHideLogoutDialog}
           />
         </DialogTitle>
         <DialogContent>
@@ -157,7 +155,7 @@ export default function Polllist() {
           <hr />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleShowHideLogoutDialog}>Cancel</Button>
           <Button variant="contained" onClick={handleLogOut} autoFocus>
             Yes
           </Button>
@@ -165,66 +163,68 @@ export default function Polllist() {
       </Dialog>
 
       {/* Polllist Table */}
+      <Wrapper>
+        <CardTable>
+          <MaterialTable
+            style={{ marginTop: 50 }}
+            columns={columns}
+            data={dataPolllistTable}
+            onRowClick={onRowClick}
+            options={{ toolbar: false, paging: false, actionsColumnIndex: -1 }}
+            actions={[
+              {
+                icon: "delete",
+                tooltip: "Delete User",
+                onClick: (event, data) => {
+                  alert(data);
+                },
+              },
+            ]}
+            components={{
+              Action: (props) => (
+                <div
+                  onClick={(event) => {
+                    setIsDeleteDialogOpen((prev) => !prev);
+                    setIdPollClicked(props.data.id);
+                    event.stopPropagation();
+                  }}
+                >
+                  <DeleteIcon />
+                  <p>Delete</p>
+                </div>
+              ),
+            }}
+          ></MaterialTable>
+          {/* //Pagination */}
+          <Pagination
+            count={countPage}
+            color="primary"
+            variant="outlined"
+            size="large"
+            shape="rounded"
+            boundaryCount={3}
+            siblingCount={2}
+            page={currentPage}
+            onChange={(event, page) => handleChangePage(page)}
+          />
+        </CardTable>
 
-      <MaterialTable
-        style={{ marginTop: 50 }}
-        columns={columns}
-        data={dataPolllistTable}
-        onRowClick={onRowClick}
-        options={{ toolbar: false, paging: false, actionsColumnIndex: -1 }}
-        actions={[
-          {
-            icon: "delete",
-            tooltip: "Delete User",
-            onClick: (event, data) => {
-              alert(data);
-            },
-          },
-        ]}
-        components={{
-          Action: (props) => (
-            <div
-              onClick={(event) => {
-                setIsOpenDialogDelete((prev) => !prev);
-                setIdPollClicked(props.data.id);
-                event.stopPropagation();
-              }}
-            >
-              <DeleteIcon />
-              <p>Delete</p>
-            </div>
-          ),
-        }}
-      ></MaterialTable>
-      <Dialog open={isOpenDialogDelete} onClose={handleCloseDialogDelete}>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you would like to delete this poll?
-            <br />
-            Once deleted, it cannot be retrieved.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialogDelete}>Keep Poll</Button>
-          <Button onClick={handleDeletePoll} autoFocus>
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* //Pagination */}
-
-      <Pagination
-        count={countPage}
-        color="primary"
-        variant="outlined"
-        size="large"
-        shape="rounded"
-        boundaryCount={3}
-        siblingCount={2}
-        page={currentPage}
-        onChange={(event, page) => handleChangePage(page)}
-      />
+        <Dialog open={isDeleteDialogOpen} onClose={handleCloseDialogDelete}>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you would like to delete this poll?
+              <br />
+              Once deleted, it cannot be retrieved.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialogDelete}>Keep Poll</Button>
+            <Button onClick={handleDeletePoll} autoFocus>
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Wrapper>
     </div>
   );
 }
