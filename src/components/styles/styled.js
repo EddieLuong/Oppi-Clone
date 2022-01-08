@@ -63,7 +63,11 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+<<<<<<< HEAD
+const MuiTextfield = styled(TextField)({
+=======
 const MuiInput = styled(TextField)({
+>>>>>>> 958931e350b15b845b98146bb33f22b49c88aa54
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
       borderRadius: "10px",
@@ -108,8 +112,14 @@ const CardTable = styled.div`
   width: 75%;
   height: 95%;
 `;
+<<<<<<< HEAD
+const StyledTable = styled(MaterialTable)({});
+
+export { Card, Wrapper, MuiTextfield, MuiButton, StyledTable, CardTable };
+=======
 const StyledTable = styled(MaterialTable)`
   color: tomato;
 `;
 
 export { Card, Wrapper, MuiInput, MuiButton, StyledTable, CardTable };
+>>>>>>> 958931e350b15b845b98146bb33f22b49c88aa54

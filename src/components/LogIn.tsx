@@ -7,7 +7,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import {useNavigate} from "react-router-dom"
 import FormHelperText from '@mui/material/FormHelperText'
 import {ApiSignIn} from "./Utils"
+<<<<<<< HEAD
+import {Wrapper,Card,MuiTextfield,MuiButton} from "./styles/styled"
+=======
 import {Wrapper,Card,MuiInput,MuiButton} from "./styles/styled"
+>>>>>>> 958931e350b15b845b98146bb33f22b49c88aa54
 
 interface ILoginInputs {
   email: string;
@@ -17,6 +21,7 @@ interface ILoginInputs {
 export default function LogIn() {
 
   const [errorMessage, setErrorMessage] = useState('');
+
   let navigate = useNavigate();
 
   const schema = Yup.object().shape({
@@ -66,7 +71,11 @@ export default function LogIn() {
             name="email"
             control={form.control}
             render={({ field: { onChange }, fieldState: { error } }) => (
+<<<<<<< HEAD
+                <MuiTextfield
+=======
                 <MuiInput
+>>>>>>> 958931e350b15b845b98146bb33f22b49c88aa54
                   onChange={onChange}
                   name="email"
                   placeholder="Email Address"
@@ -84,7 +93,11 @@ export default function LogIn() {
             name="password"
             control={form.control}
             render={({ field: { onChange }, fieldState: { error } }) => (
+<<<<<<< HEAD
+                <MuiTextfield
+=======
                 <MuiInput
+>>>>>>> 958931e350b15b845b98146bb33f22b49c88aa54
                   onChange={onChange}
                   name="password"
                   placeholder="Password"
