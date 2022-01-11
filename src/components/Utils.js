@@ -8,8 +8,26 @@ const columns = [
   { title: "Poll Question", field: "question" },
   { title: "Start Date", field: "startDate" },
   { title: "End Date", field: "endDate" },
-  { title: "Participants", field: "participants" },
-  { title: "Status", field: "status" },
+  { title: "Participants", field: "participants", align: "center" },
+  {
+    title: "Status",
+    field: "status",
+    cellStyle: (data) => {
+      if (data === "live") {
+        return {
+          backgroundColor: "#ffc2c2",
+          color: "red",
+          textTransform: "uppercase",
+        };
+      } else
+        return {
+          backgroundColor: "#c1c0c0",
+          color: "#000",
+          textTransform: "uppercase",
+        };
+    },
+    align: "center",
+  },
 ];
 
 const formatDate = (second, format) => {

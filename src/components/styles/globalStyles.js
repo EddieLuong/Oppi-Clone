@@ -11,6 +11,7 @@ const GlobalStyle = createGlobalStyle`
     line-height:1.5;
   }
   html{
+    font-size: 16px;
   }
   :root {
   --blue: #20a8d8;
@@ -47,6 +48,23 @@ const GlobalStyle = createGlobalStyle`
   #root{
     width: 100%;
     height:100%;
+  }
+  .pollist{
+    display: inline-block;
+    width:100%;
+    background-color:#f5f6f9;
+  }
+  .pollist_nav{
+    display: block;
+    height: 55px;
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+  }
+  .MuiTableRow-root.MuiTableRow-hover{
+    border-left: 1px solid #fff;
+  }
+  .MuiTableRow-root.MuiTableRow-hover:hover{
+    border-left:1px solid #42B5E8 !important;
   }
 `;
 
