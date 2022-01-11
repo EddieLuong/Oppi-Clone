@@ -23,7 +23,14 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { StyledTable, CardTable, Wrapper } from "./styles/styled";
+import {
+  StyledTable,
+  CardTable,
+  Wrapper,
+  MButton,
+  StyledPopper,
+  DialogLogout,
+} from "./styles/styled";
 
 export default function Polllist() {
   const navigate = useNavigate();
@@ -85,7 +92,6 @@ export default function Polllist() {
     handleCloseDialogDelete();
     setSameQuery((prev) => !prev); //Re-render after delete
   };
-
   //Show poll detail when click on row
   const onRowClick = (event, rowData) => {
     event.stopPropagation();
@@ -116,10 +122,18 @@ export default function Polllist() {
   return (
     <div className="pollist">
       {/* Log out Section */}
-      <Button endIcon={<KeyboardArrowDownIcon />} onClick={handleClick}>
-        Oppi admin
-      </Button>
-      <Popper
+      <div className="pollist_nav">
+        <MButton
+          disableRipple={true}
+          className="logout-Button"
+          endIcon={<KeyboardArrowDownIcon />}
+          onClick={handleClick}
+        >
+          Oppi Admin
+        </MButton>
+      </div>
+      <StyledPopper
+        className="popper-logout"
         anchorEl={anchorEl}
         onClick={handleShowHideLogoutDialog}
         open={openPopper}
@@ -137,13 +151,17 @@ export default function Polllist() {
             },
           }}
         >
-          Log out
+          Logout
         </Box>
-      </Popper>
-      <Dialog open={isLogoutDialogOpen} onClose={handleShowHideLogoutDialog}>
+      </StyledPopper>
+      <DialogLogout
+        open={isLogoutDialogOpen}
+        onClose={handleShowHideLogoutDialog}
+      >
         <DialogTitle id="alert-dialog-title">
           {"Log Out"}
           <CloseRoundedIcon
+            className="closeIcon"
             style={{ cursor: "pointer" }}
             onClick={handleShowHideLogoutDialog}
           />
@@ -152,79 +170,127 @@ export default function Polllist() {
           <DialogContentText id="alert-dialog-description">
             Are you sure you want to logout?
           </DialogContentText>
-          <hr />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleShowHideLogoutDialog}>Cancel</Button>
-          <Button variant="contained" onClick={handleLogOut} autoFocus>
+          <Button
+            className="btnLogout"
+            variant="container"
+            style={{ backgroundColor: "#ccc" }}
+            onClick={handleShowHideLogoutDialog}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="yesLogoutBtn btnLogout"
+            style={{ backgroundColor: "#20a8d8", padding: "6px 12px" }}
+            variant="contained"
+            onClick={handleLogOut}
+            autoFocus
+          >
             Yes
           </Button>
         </DialogActions>
-      </Dialog>
+      </DialogLogout>
 
       {/* Polllist Table */}
-      <Wrapper>
-        <CardTable>
-          <MaterialTable
-            style={{ marginTop: 50 }}
-            columns={columns}
-            data={dataPolllistTable}
-            onRowClick={onRowClick}
-            options={{ toolbar: false, paging: false, actionsColumnIndex: -1 }}
-            actions={[
-              {
-                icon: "delete",
-                tooltip: "Delete User",
-                onClick: (event, data) => {
-                  alert(data);
-                },
+      <CardTable>
+        <StyledTable
+          style={{
+            marginTop: 50,
+          }}
+          columns={columns}
+          data={dataPolllistTable}
+          onRowClick={onRowClick}
+          options={{
+            toolbar: false,
+            paging: false,
+            actionsColumnIndex: -1,
+            sorting: false,
+            headerStyle: {
+              backgroundColor: "#fafafa",
+              color: "#23282C",
+              fontFamily: "Montserrat",
+              fontWeight: "600",
+            },
+            rowStyle: (row) => {
+              const styles = {
+                fontSize: 13.5,
+                height: 26,
+                color: "#23282C",
+                fontWeight: 400,
+              };
+              if (row.tableData.id % 2 !== 0) {
+                styles.backgroundColor = "#fff";
+              } else styles.backgroundColor = "#ecf5fd";
+              return styles;
+            },
+          }}
+          style={{ boxShadow: "none" }}
+          actions={[
+            {
+              icon: "delete",
+              tooltip: "Delete User",
+              onClick: (event, data) => {
+                alert(data);
               },
-            ]}
-            components={{
-              Action: (props) => (
-                <div
-                  onClick={(event) => {
-                    setIsDeleteDialogOpen((prev) => !prev);
-                    setIdPollClicked(props.data.id);
-                    event.stopPropagation();
-                  }}
-                >
-                  <DeleteIcon />
-                  <p>Delete</p>
-                </div>
-              ),
-            }}
-          ></MaterialTable>
-          {/* //Pagination */}
-          <Pagination
-            count={countPage}
-            color="primary"
-            variant="outlined"
-            size="large"
-            shape="rounded"
-            boundaryCount={3}
-            siblingCount={2}
-            page={currentPage}
-            onChange={(event, page) => handleChangePage(page)}
-          />
-        </CardTable>
+            },
+          ]}
+          components={{
+            Action: (props) => (
+              <div
+                style={{
+                  display: "inline-flex",
+                  width: 121,
+                  height: 30,
+                  marginRight: 10,
+                  justifyContent: "center",
+                  border: "0.8px solid #E1E1e1",
+                  borderRadius: 4,
+                  backgroundColor: "#fff",
+                  padding: "3px 0",
+                  boxShadow: "0 2px 4px rgb(0 0 0 / 20%)",
+                }}
+                onClick={(event) => {
+                  setIsDeleteDialogOpen((prev) => !prev);
+                  setIdPollClicked(props.data.id);
+                  event.stopPropagation();
+                }}
+              >
+                <DeleteIcon style={{ fontSize: 16 }} />
+                <p>Delete</p>
+              </div>
+            ),
+          }}
+        ></StyledTable>
+        {/* //Pagination */}
+      </CardTable>
+      <Pagination
+        count={countPage}
+        color="primary"
+        variant="outlined"
+        size="large"
+        shape="rounded"
+        boundaryCount={3}
+        siblingCount={2}
+        page={currentPage}
+        onChange={(event, page) => handleChangePage(page)}
+      />
 
-        <Dialog open={isDeleteDialogOpen} onClose={handleCloseDialogDelete}>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Are you sure you would like to delete this poll?
-              <br />
-              Once deleted, it cannot be retrieved.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialogDelete}>Keep Poll</Button>
-            <Button onClick={handleDeletePoll} autoFocus>
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Wrapper>
+      <Dialog open={isDeleteDialogOpen} onClose={handleCloseDialogDelete}>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you would like to delete this poll?
+            <br />
+            Once deleted, it cannot be retrieved.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialogDelete}>Keep Poll</Button>
+          <Button onClick={handleDeletePoll} autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

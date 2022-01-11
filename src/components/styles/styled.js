@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { TextField, Button } from "@material-ui/core";
+import { TextField, Button, Popper, Dialog } from "@material-ui/core";
 import MaterialTable from "material-table";
 
 const Card = styled.div`
@@ -42,6 +42,7 @@ const Card = styled.div`
   .password input {
     min-width: 310px;
     border-radius: 10px;
+    font-size: 1rem;
   }
   .emailaddress label,
   .password label {
@@ -63,11 +64,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-<<<<<<< HEAD
 const MuiTextfield = styled(TextField)({
-=======
-const MuiInput = styled(TextField)({
->>>>>>> 958931e350b15b845b98146bb33f22b49c88aa54
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
       borderRadius: "10px",
@@ -87,7 +84,7 @@ const MuiInput = styled(TextField)({
 const MuiButton = styled(Button)({
   "&.MuiButton-root": {
     border: "0px",
-    fontSize: "17px",
+    fontSize: "1rem",
     margin: "20px auto",
     backgroundColor: "rgb(255, 176, 0)",
     boxShadow: "0 4px 8px rgb(0 0 0 / 20%)",
@@ -111,15 +108,97 @@ const MuiButton = styled(Button)({
 const CardTable = styled.div`
   width: 75%;
   height: 95%;
+  display: block;
+  margin: 8% auto;
+  margin-top: 60px;
+  background-color: #fff;
+  padding: 30px 0 30px;
+  border-radius: 1.85rem;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
 `;
-<<<<<<< HEAD
-const StyledTable = styled(MaterialTable)({});
-
-export { Card, Wrapper, MuiTextfield, MuiButton, StyledTable, CardTable };
-=======
 const StyledTable = styled(MaterialTable)`
-  color: tomato;
+
 `;
 
-export { Card, Wrapper, MuiInput, MuiButton, StyledTable, CardTable };
->>>>>>> 958931e350b15b845b98146bb33f22b49c88aa54
+const MButton = styled(Button)({
+  "&.logout-Button": {
+    backgroundColor: "transparent",
+    float: "right",
+    color: "#1890ff",
+    fontFamily: "inherit",
+    textTransform: "none",
+    padding: "15px 25px",
+    "&:hover": {
+      backgroundColor: "transparent",
+    },
+    "&:focus-visible": {
+      backgroundColor: "transparent",
+    },
+  },
+});
+const StyledPopper = styled(Popper)`
+  .MuiBox-root {
+    width: 140%;
+    margin-left: -23%;
+    margin-top: -10px;
+    background-color: #fff;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.15);
+  }
+`;
+const DialogLogout = styled(Dialog)`
+  .MuiDialog-paper {
+    top: -32%;
+    width: 37%;
+    color: rgba(0, 0, 0, 0.8);
+  }
+  .closeIcon {
+    padding: 4px;
+    width: 2rem;
+    opacity: 0.7;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .MuiDialogTitle-root {
+    display: flex;
+    color: rgba(0, 0, 0, 0.8) !important;
+    justify-content: space-between;
+    border-bottom: 1px solid #c8ced3;
+    font-size: 17.5px;
+  }
+  .MuiDialogContent-root {
+    border-bottom: 1px solid #c8ced3;
+    font-size: 0.875rem;
+  }
+  .css-qfso29-MuiTypography-root-MuiDialogContentText-root {
+    padding-top: 20px;
+    font-size: 14px;
+  }
+  .MuiDialogContentText-root,
+  .MuiButton-root,
+  .MuiDialog-paper {
+    font-family: Montserrat;
+  }
+  ,
+  .btnLogout {
+    text-transform: none;
+  }
+  .btnLogout:hover {
+    opacity: 0.8;
+  }
+  .MuiDialogActions-root {
+    padding: 20px;
+  }
+`;
+export {
+  Card,
+  Wrapper,
+  MuiTextfield,
+  MuiButton,
+  StyledTable,
+  CardTable,
+  MButton,
+  StyledPopper,
+  DialogLogout,
+};
