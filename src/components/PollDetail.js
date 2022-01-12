@@ -1,5 +1,6 @@
 import { ApiPollDetail, accessToken, formatDate } from "./Utils";
 import { TextField, Typography, Button } from "@material-ui/core";
+import FormHelperText from "@mui/material/FormHelperText";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -12,6 +13,8 @@ import { Switch } from "antd";
 
 export default function PollDetail() {
   const [dataPoll, setDataPoll] = useState({});
+  const [startDate, setStartDate] = useState(0);
+  const [isPublicResult, setIsPublicResult] = useState(false);
   const idPollDetail = sessionStorage.getItem("idPollDetail");
   const fields = [
     "title",
@@ -90,17 +93,24 @@ export default function PollDetail() {
   }, []);
 
   return (
-    <div>
+    <div className="pollDetail">
       <Typography variant="h2">Poll Detail</Typography>
-      <form noValidate onSubmit={handleSubmit(onSubmit)}>
-        <div className="pollName">
-          <label htmlFor="pollName">Poll Name</label>
+      <form
+        className="formPollDetail flex-col"
+        noValidate
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="pollName flex-col">
+          <label className="labelPollDetail" htmlFor="pollName">
+            Poll Name *
+          </label>
           <Controller
             name="title"
             control={control}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <TextField
                 onChange={onChange}
+                className="textfield"
                 id="pollName"
                 multiline={true}
                 rows={2}
@@ -112,9 +122,14 @@ export default function PollDetail() {
               />
             )}
           />
+          <FormHelperText style={{ alignSelf: "end" }}>
+            Max 80 characters
+          </FormHelperText>
         </div>
-        <div className="pollQuestion">
-          <label htmlFor="pollQuestion">Poll Question</label>
+        <div className="pollQuestion flex-col">
+          <label className="labelPollDetail" htmlFor="pollQuestion">
+            Poll Question *
+          </label>
 
           <Controller
             name="question"
@@ -123,8 +138,10 @@ export default function PollDetail() {
               <TextField
                 type="text"
                 onChange={onChange}
+                className="textfield"
                 id="pollQuestion"
                 value={value}
+                variant="outlined"
                 multiline={true}
                 rows={2}
                 error={Boolean(error)}
@@ -132,9 +149,14 @@ export default function PollDetail() {
               />
             )}
           />
+          <FormHelperText style={{ alignSelf: "end" }}>
+            Max 255 characters
+          </FormHelperText>
         </div>
-        <div className="description">
-          <label htmlFor="description">Description</label>
+        <div className="description flex-col">
+          <label className="labelPollDetail" htmlFor="description">
+            Description *
+          </label>
           <Controller
             control={control}
             name="description"
@@ -142,6 +164,8 @@ export default function PollDetail() {
               <TextField
                 onChange={onChange}
                 value={value}
+                className="textfield"
+                variant="outlined"
                 id="description"
                 type="text"
                 multiline={true}
@@ -151,98 +175,139 @@ export default function PollDetail() {
               />
             )}
           />
+          <FormHelperText style={{ alignSelf: "end" }}>
+            Max 999 characters
+          </FormHelperText>
         </div>
-        <div className="pollDate">
-          <label htmlFor="startDate">Poll Dates</label>
-          <Controller
-            name="openedAt"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <React.Fragment>
-                <label htmlFor="startDate">From</label>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
+        <div className="pollDate flex-col">
+          <label className="labelPollDetail" htmlFor="startDate">
+            Poll Dates *
+          </label>
+          <div className="flex-row">
+            <Controller
+              name="openedAt"
+              control={control}
+              render={({ field: { onChange, value } }) => {
+                setStartDate(value);
+                return (
+                  <React.Fragment>
+                    <label htmlFor="startDate">From</label>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        onChange={onChange}
+                        value={value}
+                        minDate={new Date(value)}
+                        maxDate={new Date(value)}
+                        renderInput={(params) => (
+                          <TextField
+                            id="zeropadding"
+                            className="textfield labelDate"
+                            variant="outlined"
+                            {...params}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </React.Fragment>
+                );
+              }}
+            />
+            <Controller
+              name="closedAt"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <React.Fragment>
+                  <label htmlFor="endDate">to</label>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      onChange={onChange}
+                      value={value}
+                      minDate={new Date(startDate)}
+                      renderInput={(params) => (
+                        <TextField
+                          className="textfield labelDate"
+                          id="zeropadding"
+                          variant="outlined"
+                          {...params}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </React.Fragment>
+              )}
+            />
+          </div>
+        </div>
+
+        <div className="flex-row rowspace mt10">
+          <div className="publicRults flex-col ">
+            <label className="labelPollDetail" htmlFor="">
+              Public results
+            </label>
+            <Controller
+              control={control}
+              name="isPublicResult"
+              render={({ field: { onChange, value } }) => {
+                setIsPublicResult(value);
+                return (
+                  <Switch
+                    disabled={value}
                     onChange={onChange}
-                    value={value}
-                    minDate={new Date(value)}
-                    maxDate={new Date(value)}
-                    renderInput={(params) => (
-                      <TextField variant="outlined" {...params} />
-                    )}
+                    checked={value}
+                    checkedChildren="On"
+                    unCheckedChildren="Off"
+                    defaultChecked
                   />
-                </LocalizationProvider>
-              </React.Fragment>
-            )}
-          />
-          <Controller
-            name="closedAt"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <React.Fragment>
-                <label htmlFor="endDate">to</label>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    onChange={onChange}
-                    value={value}
-                    minDate={new Date(value)}
-                    renderInput={(params) => (
-                      <TextField variant="outlined" {...params} />
-                    )}
-                  />
-                </LocalizationProvider>
-              </React.Fragment>
-            )}
-          />
+                );
+              }}
+            />
+          </div>
+          <div className="redirectURL flex-col">
+            <label className="labelPollDetail" htmlFor="redirectURL">
+              Redirect URL
+            </label>
+            <Controller
+              name="resultRedirectUrl"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  disabled={isPublicResult}
+                  className="textfield"
+                  id="zeropadding"
+                  onChange={onChange}
+                  value={value}
+                  variant="outlined"
+                  type="text"
+                />
+              )}
+            />
+          </div>
+          <div className="emailRequired flex-col">
+            <label className="labelPollDetail" htmlFor="">
+              Email required
+            </label>
+            <Controller
+              control={control}
+              name="isRequireEmail"
+              render={({ field: { onChange, value } }) => (
+                <Switch
+                  onChange={onChange}
+                  checked={value}
+                  checkedChildren="On"
+                  unCheckedChildren="Off"
+                  defaultChecked
+                />
+              )}
+            />
+          </div>
         </div>
-        <div className="publicRults">
-          <label htmlFor="">Public results</label>
-          <Controller
-            control={control}
-            name="isPublicResult"
-            render={({ field: { onChange, value } }) => (
-              <Switch
-                onChange={onChange}
-                checked={value}
-                checkedChildren="On"
-                unCheckedChildren="Off"
-                defaultChecked
-              />
-            )}
-          />
-        </div>
-        <div className="redirectURL">
-          <label htmlFor="redirectURL">Redirect URL</label>
-          <Controller
-            name="resultRedirectUrl"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextField
-                onChange={onChange}
-                value={value}
-                id="redirectURL"
-                type="text"
-              />
-            )}
-          />
-        </div>
-        <div className="emailRequired">
-          <label htmlFor="">Email required</label>
-          <Controller
-            control={control}
-            name="isRequireEmail"
-            render={({ field: { onChange, value } }) => (
-              <Switch
-                onChange={onChange}
-                checked={value}
-                checkedChildren="On"
-                unCheckedChildren="Off"
-                defaultChecked
-              />
-            )}
-          />
-        </div>
-        <Button type="submit" variant="outlined" onClick={onSubmit}>
-          CLick
+        <Button
+          className="btnUpdate"
+          type="submit"
+          variant="outlined"
+          onClick={onSubmit}
+        >
+          Save
         </Button>
       </form>
     </div>
