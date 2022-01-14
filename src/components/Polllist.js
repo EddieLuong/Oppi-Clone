@@ -218,6 +218,7 @@ export default function Polllist() {
                 height: 26,
                 color: "#23282C",
                 fontWeight: 400,
+                padding: "0 10px",
               };
               if (row.tableData.id % 2 !== 0) {
                 styles.backgroundColor = "#fff";
@@ -238,16 +239,18 @@ export default function Polllist() {
           components={{
             Action: (props) => (
               <div
+                className="boxAction"
                 style={{
                   display: "inline-flex",
-                  width: 121,
-                  height: 30,
+                  width: 115,
+                  marginTop: "16px",
                   marginRight: 10,
                   justifyContent: "center",
                   border: "0.8px solid #E1E1e1",
+                  padding: "3px 0",
                   borderRadius: 4,
                   backgroundColor: "#fff",
-                  padding: "3px 0",
+                  alignItems: "center",
                   boxShadow: "0 2px 4px rgb(0 0 0 / 20%)",
                 }}
                 onClick={(event) => {
@@ -265,6 +268,7 @@ export default function Polllist() {
         {/* //Pagination */}
       </CardTable>
       <Pagination
+        className="pagination"
         count={countPage}
         color="primary"
         variant="outlined"
@@ -276,17 +280,27 @@ export default function Polllist() {
         onChange={(event, page) => handleChangePage(page)}
       />
 
-      <Dialog open={isDeleteDialogOpen} onClose={handleCloseDialogDelete}>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+      <Dialog
+        className="dialogDelete"
+        open={isDeleteDialogOpen}
+        onClose={handleCloseDialogDelete}
+      >
+        <DialogContent >
+          <img className="imgDeletePoll" src="/img/black_man_meme.png" alt="" />
+          <DialogContentText
+            id="alert-dialog-description "
+            className="align-center"
+          >
             Are you sure you would like to delete this poll?
             <br />
             Once deleted, it cannot be retrieved.
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialogDelete}>Keep Poll</Button>
-          <Button onClick={handleDeletePoll} autoFocus>
+        <DialogActions className="dialogActionsDelete">
+          <Button className="keepPollBtn" onClick={handleCloseDialogDelete}>
+            Keep Poll
+          </Button>
+          <Button id="deletePollBtn" onClick={handleDeletePoll}>
             Delete
           </Button>
         </DialogActions>
