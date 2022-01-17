@@ -69,6 +69,7 @@ export default function LogIn() {
             render={({ field: { onChange }, fieldState: { error } }) => (
                 <MuiTextfield
                   onChange={onChange}
+                  className="input_login"
                   name="email"
                   placeholder="Email Address"
                   variant="outlined"
@@ -87,6 +88,7 @@ export default function LogIn() {
             render={({ field: { onChange }, fieldState: { error } }) => (
                 <MuiTextfield
                   onChange={onChange}
+                  className="input_login"
                   name="password"
                   placeholder="Password"
                   variant="outlined"

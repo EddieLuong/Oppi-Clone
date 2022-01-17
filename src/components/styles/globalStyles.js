@@ -115,15 +115,17 @@ const GlobalStyle = createGlobalStyle`
     border-radius: 1.5rem;
     box-shadow: 0 5px 5px rgba(0,0,0,0.2);
 }
-  .textfield .MuiInputBase-root,
   .textfield .MuiInputBase-root{
     border: 0px solid transparent;
     outline:none;
     resize: none;
     border-radius: 10px;
     background-color:#fff;
+    box-shadow: inset 6px 6px 8px rgb(18 46 101 / 8%);
   }
-
+  .textfield .MuiInputBase-root:focus{
+    box-shadow:none;
+  }
   textarea.MuiInputBase-input{
     font-size: 15px ;
     font-family: Montserrat;
@@ -131,9 +133,7 @@ const GlobalStyle = createGlobalStyle`
   .textfield .PrivateNotchedOutline-root-1{
     border:none;
   }
-  div.MuiInputBase-root{
-    padding: 12px 12px;
-  }
+
   textarea.MuiInputBase-input:focus div.MuiInputBase-root{
     background-color: #fff;
     border-color: #8ad4ee;
@@ -177,7 +177,7 @@ const GlobalStyle = createGlobalStyle`
   }
   .rowspace{
     justify-content: space-between;
-    width: 65%;
+    width: 55%;
   }
   div.css-ypiqx9-MuiDialogContent-root{
     padding: 20px 24px 10px;
@@ -212,7 +212,7 @@ const GlobalStyle = createGlobalStyle`
     .labelPollDetail{
       margin-bottom: 10px;
     }
-    .btnUpdate{
+    button.btnUpdate{
     border: 0px;
     font-size: 15px;
     margin: 0px;
@@ -235,6 +235,9 @@ const GlobalStyle = createGlobalStyle`
     .labelDate{
       margin-right:10px;
       margin-left:20px;
+    }
+    .input_login.bKgTJT .MuiOutlinedInput-root{
+      padding: 0;
     }
 `;
 
