@@ -66,6 +66,7 @@ const Wrapper = styled.div`
 `;
 const MuiTextfield = styled(TextField)({
   "& .MuiOutlinedInput-root": {
+    padding: "12px",
     "& fieldset": {
       borderRadius: "10px",
       border: "2px solid rgb(240,241,240)",
@@ -101,7 +102,7 @@ const MuiButton = styled(Button)({
     },
   },
   "&.MuiButton-text": {
-    padding: "6px 0px",
+    // padding: "6px 0px",
   },
 });
 
@@ -116,9 +117,7 @@ const CardTable = styled.div`
   border-radius: 1.85rem;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
 `;
-const StyledTable = styled(MaterialTable)`
-
-`;
+const StyledTable = styled(MaterialTable)``;
 
 const MButton = styled(Button)({
   "&.logout-Button": {

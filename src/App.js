@@ -5,6 +5,7 @@ import LogIn from "./components/LogIn.tsx";
 import Polllist from "./components/Polllist";
 import PollDetail from "./components/PollDetail.js";
 import GlobalStyle from "./components/styles/globalStyles";
+import ProtectedRoute from "./components/ProtectedRoute.js";
 function App() {
   return (
     <React.Fragment>
@@ -13,9 +14,9 @@ function App() {
         <Routes>
           <Route path="/" element={<LogIn />}></Route>
 
-          <Route path="/polllist" element={<Polllist />}></Route>
+          <ProtectedRoute path="/polllist" element={<Polllist />}></ProtectedRoute>
 
-          <Route path="/polldetail" element={<PollDetail />}></Route>
+          <ProtectedRoute path="/polldetail" element={<PollDetail />}></ProtectedRoute>
         </Routes>
       </Router>
     </React.Fragment>
