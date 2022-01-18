@@ -6,7 +6,7 @@ import {
   DialogActions,
   Pagination,
 } from "@mui/material";
-import Header from "./Header"
+import Header from "./Header";
 import { handleDataToTable, columns, accessToken, ApiDelete } from "./Utils";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
@@ -83,7 +83,7 @@ export default function Polllist() {
   return (
     <div className="pollist">
       {/* Log out Section */}
-        <Header />
+      <Header />
       {/* Polllist Table */}
       <CardTable>
         <StyledTable

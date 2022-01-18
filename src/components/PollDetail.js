@@ -54,21 +54,23 @@ export default function PollDetail() {
   });
   const onSubmit = (data) => {
     if (data.title && data.question && data.description) {
+      const dataSend = {
+        ...dataPoll,
+        name: data.title.trim(),
+        question: data.question.trim(),
+        description: data.description.trim(),
+        is_turn_on_intergration_setting: true,
+        passcode: "2123124",
+      };
       axios({
         method: "put",
         url: `https://dev.oppi.live/api/admin/v1/polls/${idPollDetail}`,
         headers: {
           Authorization: `Bearer  ${accessToken}`,
         },
-        data: {
-          ...dataPoll,
-          name: data.title.trim(),
-          question: data.question.trim(),
-          description: data.description.trim(),
-          is_turn_on_intergration_setting: true,
-          passcode: "2123124",
-        },
+        data: dataSend,
       });
+      setDataPoll(dataSend);
     }
   };
 
@@ -80,15 +82,18 @@ export default function PollDetail() {
         },
       })
       .then((respon) => {
-        setDataPoll(respon.data);
-        fields.forEach((field) => {
-          if (field === "openedAt" || field === "closedAt") {
-            setValue(
-              field,
-              formatDate(respon.data[field], { format: "YYYY-MM-DD" })
-            );
-          } else setValue(field, respon.data[field] ? respon.data[field] : "");
-        });
+        if (respon.status === 200) {
+          setDataPoll(respon.data);
+          fields.forEach((field) => {
+            if (field === "openedAt" || field === "closedAt") {
+              setValue(
+                field,
+                formatDate(respon.data[field], { format: "YYYY-MM-DD" })
+              );
+            } else
+              setValue(field, respon.data[field] ? respon.data[field] : "");
+          });
+        }
       })
       .catch((e) => console.log(e));
   }, []);

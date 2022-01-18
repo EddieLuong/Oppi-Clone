@@ -225,7 +225,7 @@ const GlobalStyle = createGlobalStyle`
     color:#fff;
     text-transform: none;
     }
-    .btnUpdate:hover{
+    button.btnUpdate:hover{
       background-color:rgb(255, 176, 0);
       opacity:0.8;
     }

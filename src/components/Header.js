@@ -33,11 +33,14 @@ export default function Header() {
   };
   //Handle Logout
   const handleLogOut = () => {
-    sessionStorage.removeItem("AdminAccessToken");
-    navigate("/");
     axios
       .post(ApiLogOut)
-      .then((respon) => console.log("Log out Success!!!"))
+      .then((respon) => {
+        if (respon.status === 200) {
+          sessionStorage.removeItem("AdminAccessToken");
+          navigate("/");
+        }
+      })
       .catch((e) => console.log(e));
   };
   return (
