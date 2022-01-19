@@ -6,13 +6,13 @@ import {
   DialogActions,
   Pagination,
 } from "@mui/material";
-import Header from "./Header";
-import { handleDataToTable, columns, ApiDelete } from "./Utils";
+import Header from "../../components/Header";
+import { handleDataToTable, columns, ApiDelete } from "../../components/Utils";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { StyledTable, CardTable } from "./styles/styled";
+import { StyledTable, CardTable } from "../../components/styles/styled";
 
 function Polllist() {
   const accessToken = sessionStorage.getItem("AdminAccessToken");
