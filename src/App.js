@@ -1,13 +1,14 @@
 import "./App.css";
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import LogIn from "./components/LogIn.tsx";
-import Polllist from "./components/Polllist";
-import PollDetail from "./components/PollDetail.js";
+import LogIn from "./containers/Login";
+import Polllist from "./containers/Polllist";
+import PollDetail from "./containers/PollDetail";
 import GlobalStyle from "./components/styles/globalStyles";
 import ProtectedRoute from "./components/ProtectedRoute.js";
 import { accessToken } from "./components/Utils";
 import { Navigate } from "react-router-dom";
+
 function App() {
   const cacheUrl = localStorage.getItem("CACHED_URL");
   return (

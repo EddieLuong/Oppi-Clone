@@ -6,8 +6,8 @@ import axios  from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {useNavigate} from "react-router-dom"
 import FormHelperText from '@mui/material/FormHelperText'
-import {ApiSignIn} from "./Utils"
-import {Wrapper,Card,MuiTextfield,MuiButton} from "./styles/styled"
+import {ApiSignIn} from "../../components/Utils"
+import {Wrapper,Card,MuiTextfield,MuiButton} from "../../components/styles/styled"
 
 interface ILoginInputs {
   email: string;
@@ -36,15 +36,10 @@ export default function LogIn() {
           .then((res)=>{
             if(res.status === 200){
               setErrorMessage("");
-              //Use Async function because sometime polllist page call API too fast and internet slow, token haven't set yet and have error when call API without Token. So, to sure Token have already when call API, I use Async Function
-              async function setToken(){
-                sessionStorage.setItem("AdminAccessToken",res.data.token);
-              }
-              setToken().then(()=>{
-                navigate("/polllist")
-              })
-            }
-          })
+              sessionStorage.setItem("AdminAccessToken",res.data.token);
+              navigate("/polllist");
+
+          }})
           .catch((e) => {
             console.log("Fail to Sign In");
             if(e.response.data.message=== "Incorrect username or password") {

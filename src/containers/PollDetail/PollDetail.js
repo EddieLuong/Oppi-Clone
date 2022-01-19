@@ -1,6 +1,6 @@
-import { ApiPollDetail, formatDate } from "./Utils";
+import { ApiPollDetail, formatDate } from "../../components/Utils";
 import { Typography, Button } from "@material-ui/core";
-import { MuiTextfield } from "./styles/styled";
+import { MuiTextfield } from "../../components/styles/styled";
 import FormHelperText from "@mui/material/FormHelperText";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -11,7 +11,7 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 import { Switch } from "antd";
-import Header from "./Header";
+import Header from "../../components/Header";
 
 function PollDetail() {
   const [dataPoll, setDataPoll] = useState({});
