@@ -6,17 +6,36 @@ import Polllist from "./components/Polllist";
 import PollDetail from "./components/PollDetail.js";
 import GlobalStyle from "./components/styles/globalStyles";
 import ProtectedRoute from "./components/ProtectedRoute.js";
+import { accessToken } from "./components/Utils";
+import { Navigate } from "react-router-dom";
 function App() {
+  const cacheUrl = localStorage.getItem("CACHED_URL");
   return (
     <React.Fragment>
       <GlobalStyle />
       <Router>
         <Routes>
-          <Route path="/" element={<LogIn />}></Route>
+          <Route
+            path="/"
+            element={accessToken ? <Navigate to={cacheUrl} /> : <LogIn />}
+          ></Route>
+          <Route
+            path="/polllist"
+            element={
+              <ProtectedRoute>
+                <Polllist />
+              </ProtectedRoute>
+            }
+          ></Route>
 
-          <ProtectedRoute path="/polllist" element={<Polllist />}></ProtectedRoute>
-
-          <ProtectedRoute path="/polldetail" element={<PollDetail />}></ProtectedRoute>
+          <Route
+            path="/polldetail"
+            element={
+              <ProtectedRoute>
+                <PollDetail />
+              </ProtectedRoute>
+            }
+          ></Route>
         </Routes>
       </Router>
     </React.Fragment>

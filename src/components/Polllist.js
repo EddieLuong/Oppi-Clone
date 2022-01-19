@@ -7,14 +7,15 @@ import {
   Pagination,
 } from "@mui/material";
 import Header from "./Header";
-import { handleDataToTable, columns, accessToken, ApiDelete } from "./Utils";
+import { handleDataToTable, columns, ApiDelete } from "./Utils";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { StyledTable, CardTable } from "./styles/styled";
 
-export default function Polllist() {
+function Polllist() {
+  const accessToken = sessionStorage.getItem("AdminAccessToken");
   const navigate = useNavigate();
   const [query, setQuery] = useState(0);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -197,3 +198,4 @@ export default function Polllist() {
     </div>
   );
 }
+export default React.memo(Polllist);
