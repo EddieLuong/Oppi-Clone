@@ -232,9 +232,10 @@ const GlobalStyle = createGlobalStyle`
     .mt10{
       margin-top: 10px;
     }
-    .labelDate{
+    div.labelDate{
       margin-right:10px;
       margin-left:20px;
+      margin-bottom: 15px;
     }
     .input_login.bKgTJT .MuiOutlinedInput-root{
       padding: 0;
