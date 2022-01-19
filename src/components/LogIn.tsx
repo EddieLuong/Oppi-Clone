@@ -38,8 +38,8 @@ export default function LogIn() {
               setErrorMessage("");
               //Use Async function because sometime polllist page call API too fast and internet slow, token haven't set yet and have error when call API without Token. So, to sure Token have already when call API, I use Async Function
               async function setToken(){
-                sessionStorage.setItem("AdminAccessToken",res.data.token)
-              ;}
+                sessionStorage.setItem("AdminAccessToken",res.data.token);
+              }
               setToken().then(()=>{
                 navigate("/polllist")
               })

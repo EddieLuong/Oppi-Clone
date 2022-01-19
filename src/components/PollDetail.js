@@ -1,4 +1,4 @@
-import { ApiPollDetail, accessToken, formatDate } from "./Utils";
+import { ApiPollDetail, formatDate } from "./Utils";
 import { Typography, Button } from "@material-ui/core";
 import { MuiTextfield } from "./styles/styled";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -13,11 +13,13 @@ import { useForm, Controller } from "react-hook-form";
 import { Switch } from "antd";
 import Header from "./Header";
 
-export default function PollDetail() {
+function PollDetail() {
   const [dataPoll, setDataPoll] = useState({});
   const [startDate, setStartDate] = useState(0);
   const [isPublicResult, setIsPublicResult] = useState(false);
   const idPollDetail = sessionStorage.getItem("idPollDetail");
+  const accessToken = sessionStorage.getItem("AdminAccessToken");
+
   const fields = [
     "title",
     "question",
@@ -206,7 +208,6 @@ export default function PollDetail() {
                 name="openedAt"
                 control={control}
                 render={({ field: { onChange, value } }) => {
-                  setStartDate(value);
                   return (
                     <React.Fragment>
                       <label htmlFor="startDate">From</label>
@@ -266,7 +267,6 @@ export default function PollDetail() {
                 control={control}
                 name="isPublicResult"
                 render={({ field: { onChange, value } }) => {
-                  setIsPublicResult(value);
                   return (
                     <Switch
                       disabled={value}
@@ -332,3 +332,4 @@ export default function PollDetail() {
     </React.Fragment>
   );
 }
+export default React.memo(PollDetail);

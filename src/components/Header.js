@@ -38,6 +38,8 @@ export default function Header() {
       .then((respon) => {
         if (respon.status === 200) {
           sessionStorage.removeItem("AdminAccessToken");
+          localStorage.removeItem("CACHED_URL");
+          sessionStorage.removeItem("idPollDetail");
           navigate("/");
         }
       })
