@@ -97,8 +97,11 @@ const handleDataToTable = (polllistArray) => {
     };
   });
 };
-
+const getPolllistData = async (polllistArray) => {
+  return handleDataToTable(polllistArray);
+};
 export {
+  getPolllistData,
   formatDate,
   handleDataToTable,
   ApiSignIn,

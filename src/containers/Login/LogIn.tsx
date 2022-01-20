@@ -1,13 +1,12 @@
 import {Link} from "@material-ui/core";
 import { useForm, Controller} from "react-hook-form";
-import { useState } from "react";
 import * as Yup from "yup";
-import axios  from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {useNavigate} from "react-router-dom"
-import FormHelperText from '@mui/material/FormHelperText'
-import {ApiSignIn} from "../../components/Utils"
-import {Wrapper,Card,MuiTextfield,MuiButton} from "../../components/styles/styled"
+import {useNavigate} from "react-router-dom";
+import FormHelperText from '@mui/material/FormHelperText';
+import {Wrapper,Card,MuiTextfield,MuiButton} from "../../components/styles/styled";
+import {useAppDispatch,useAppSelector} from "../../redux/consumeHook.ts";
+import {sendSignInRequest} from "./reducer";
 
 interface ILoginInputs {
   email: string;
@@ -15,9 +14,12 @@ interface ILoginInputs {
 }
 
 export default function LogIn() {
-  const [errorMessage, setErrorMessage] = useState('');
 
-  let navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
+
+  const {errorMessage} = useAppSelector(state => state.login);
 
   const schema = Yup.object().shape({
     email: Yup.string().email("Email is invalid, please try again.").required("Email is required, please fill in."),
@@ -32,23 +34,9 @@ export default function LogIn() {
     resolver: yupResolver(schema),
   });
   const onSubmit = (data) => {
-      axios.post(ApiSignIn, data)
-          .then((res)=>{
-            if(res.status === 200){
-              setErrorMessage("");
-              sessionStorage.setItem("AdminAccessToken",res.data.token);
-              navigate("/polllist");
-
-          }})
-          .catch((e) => {
-            console.log("Fail to Sign In");
-            if(e.response.data.message=== "Incorrect username or password") {
-              setErrorMessage("Email or password is invalid, please try again.")
-            }
-            else{
-              setErrorMessage(' ')
-            }
-        });
+    dispatch(sendSignInRequest(data).then(()=>{
+        navigate("/polllist")
+    }))
   };
   return (
     <Wrapper>
