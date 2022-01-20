@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import store from "../../redux/store.ts";
 import axios from "axios";
 import {
   ApiDelete,
@@ -10,10 +9,10 @@ import {
 const initialState = {
   query: 0,
   isDeleteDialogOpen: false,
-  dataPolllistTable: null,
+  dataPolllistTable: {},
   currentPage: 1,
-  idPollDelete: null,
-  countPage: null,
+  idPollDelete: 0,
+  countPage: 0,
   sameQuery: false,
 };
 
@@ -45,9 +44,8 @@ export const slice = createSlice({
   },
 });
 
-let idPollDelete = store.getState().polllist.idPollDelete;
-let query = store.getState().polllist.query;
-export const deletePollRequest = () => async (dispatch) => {
+export const deletePollRequest = () => async (dispatch, getState) => {
+  let idPollDelete = getState().polllist.idPollDelete;
   axios
     .delete(`${ApiDelete}/${idPollDelete}`, {
       headers: {
@@ -61,7 +59,9 @@ export const deletePollRequest = () => async (dispatch) => {
   // setSameQuery((prev) => !prev);
 };
 
-export const fetchDataPolllist = () => async (dispatch) => {
+export const polllistActions = slice.actions;
+export const fetchDataPolllist = () => async (dispatch, getState) => {
+  let query = getState().polllist.query;
   axios
     .get(
       `https://dev.oppi.live/api/admin/v1/polls?offset=${query}&limit=10&direction=desc&search=`,
@@ -84,7 +84,5 @@ export const fetchDataPolllist = () => async (dispatch) => {
       }
     });
 };
-
-export const polllistActions = slice.actions;
 
 export default slice.reducer;

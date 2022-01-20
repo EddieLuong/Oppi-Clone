@@ -7,42 +7,57 @@ import {
   Pagination,
 } from "@mui/material";
 import Header from "../../components/Header";
-import { columns } from "../../components/Utils";
+import { handleDataToTable, columns, ApiDelete } from "../../components/Utils";
 import DeleteIcon from "@mui/icons-material/Delete";
-import React, { useEffect } from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { StyledTable, CardTable } from "../../components/styles/styled";
-import { useAppDispatch, useAppSelector } from "../../redux/consumeHook.ts";
-import {
-  polllistActions,
-  deletePollRequest,
-  fetchDataPolllist,
-} from "./reducer";
+import { useSelector, useDispatch } from "react-redux";
+import { polllistActions } from "./reducer";
 
 function Polllist() {
+  const accessToken = sessionStorage.getItem("AdminAccessToken");
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const polllistState = useAppSelector((state) => state.polllist);
+  const dispatch = useDispatch();
+  const polllistState = useSelector((state) => state.polllist);
+  // const [query, setQuery] = useState(0);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [dataPolllistTable, setDataPolllistTable] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [idPollClicked, setIdPollClicked] = useState(0);
+  const [sameQuery, setSameQuery] = useState(false); //use to re-render polllist table when delete
+  const [countPage, setCountPage] = useState(0);
 
   //input: data get from API, out put: data in rows of Polllist Table
-
+  const getPolllistData = (polllistArray) => {
+    const rows = handleDataToTable(polllistArray);
+    setDataPolllistTable(rows);
+  };
   //Change page in Pagination: reset current page index and re-render polllist
   const handleChangePage = (page) => {
-    dispatch(polllistActions.setCurrentPage(page));
+    setCurrentPage(page);
     dispatch(polllistActions.setQuery((page - 1) * 10));
-    // setCurrentPage(page);
     // setQuery((page - 1) * 10);
   };
 
   //Handle when click Cancel/click into space
   const handleCloseDialogDelete = () => {
-    dispatch(polllistActions.toggleDeleteDialog());
-    // setIsDeleteDialogOpen((prev) => !prev);
+    setIsDeleteDialogOpen((prev) => !prev);
   };
   //Delete Poll
   const handleDeletePoll = () => {
-    dispatch(deletePollRequest());
+    axios
+      .delete(`${ApiDelete}/${idPollClicked}`, {
+        headers: {
+          Authorization: `Bearer  ${accessToken}`,
+        },
+      })
+      .then((respon) => console.log(respon))
+      .catch((err) => console.log(err));
+
     handleCloseDialogDelete();
+    setSameQuery((prev) => !prev); //Re-render after delete
   };
   //Show poll detail when click on row
   const onRowClick = (event, rowData) => {
@@ -52,8 +67,25 @@ function Polllist() {
   };
 
   useEffect(() => {
-    dispatch(fetchDataPolllist());
-  }, [dispatch]);
+    axios
+      .get(
+        `https://dev.oppi.live/api/admin/v1/polls?offset=${polllistState.query}&limit=10&direction=desc&search=`,
+        {
+          headers: {
+            Authorization: `Bearer  ${accessToken}`,
+          },
+        }
+      )
+      .then((respon) => {
+        getPolllistData(respon.data.list);
+        let totalPage = respon.data.totalCount;
+        if (totalPage % 10 === 0) {
+          setCountPage(totalPage / 10);
+        } else {
+          setCountPage((totalPage - (totalPage % 10)) / 10 + 1);
+        }
+      });
+  }, [polllistState.query, sameQuery]);
   return (
     <div className="pollist">
       {/* Log out Section */}
@@ -62,7 +94,7 @@ function Polllist() {
       <CardTable>
         <StyledTable
           columns={columns}
-          data={polllistState.dataPolllistTable}
+          data={dataPolllistTable}
           onRowClick={onRowClick}
           options={{
             toolbar: false,
@@ -117,10 +149,8 @@ function Polllist() {
                   boxShadow: "0 2px 4px rgb(0 0 0 / 20%)",
                 }}
                 onClick={(event) => {
-                  dispatch(polllistActions.toggleDeleteDialog());
-                  dispatch(polllistActions.setIdPollDelete(props.data.id));
-                  // setIsDeleteDialogOpen((prev) => !prev);
-                  // setIdPollClicked(props.data.id);
+                  setIsDeleteDialogOpen((prev) => !prev);
+                  setIdPollClicked(props.data.id);
                   event.stopPropagation();
                 }}
               >
@@ -134,20 +164,20 @@ function Polllist() {
       </CardTable>
       <Pagination
         className="pagination"
-        count={polllistState.countPage}
+        count={countPage}
         color="primary"
         variant="outlined"
         size="large"
         shape="rounded"
         boundaryCount={3}
         siblingCount={2}
-        page={polllistState.currentPage}
+        page={currentPage}
         onChange={(event, page) => handleChangePage(page)}
       />
 
       <Dialog
         className="dialogDelete"
-        open={polllistState.isDeleteDialogOpen}
+        open={isDeleteDialogOpen}
         onClose={handleCloseDialogDelete}
       >
         <DialogContent>
