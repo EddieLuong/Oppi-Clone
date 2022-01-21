@@ -1,6 +1,7 @@
-import { createSlice,na } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { ApiSignIn } from "../../components/Utils";
+import { history } from "../../App";
 
 const initialState = {
   errorMessage: "",
@@ -22,6 +23,7 @@ export const sendSignInRequest = (data) => async (dispatch) => {
       if (res.status === 200) {
         dispatch(setErrorMessage(""));
         sessionStorage.setItem("AdminAccessToken", res.data.token);
+        history.push("/polllist");
       }
     })
     .catch((e) => {

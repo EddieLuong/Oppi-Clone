@@ -37,10 +37,14 @@ export default function Header() {
       .post(ApiLogOut)
       .then((respon) => {
         if (respon.status === 200) {
-          sessionStorage.removeItem("AdminAccessToken");
-          localStorage.removeItem("CACHED_URL");
-          sessionStorage.removeItem("idPollDetail");
-          navigate("/");
+          async function clearStorage() {
+            sessionStorage.removeItem("AdminAccessToken");
+            localStorage.removeItem("CACHED_URL");
+            sessionStorage.removeItem("idPollDetail");
+          }
+          clearStorage().then(() => {
+            navigate("/");
+          });
         }
       })
       .catch((e) => console.log(e));

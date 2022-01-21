@@ -1,17 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import {
-  ApiDelete,
-  accessToken,
-  getPolllistData,
-} from "../../components/Utils";
+import { ApiDelete, getPolllistData } from "../../components/Utils";
 
 const initialState = {
   query: 0,
-  isDeleteDialogOpen: false,
-  dataPolllistTable: {},
-  currentPage: 1,
+  dataPolllistTable: [],
   idPollDelete: 0,
+  idPollDetail: 0,
   countPage: 0,
   sameQuery: false,
 };
@@ -23,14 +18,8 @@ export const slice = createSlice({
     setQuery(state, action) {
       state.query = action.payload;
     },
-    toggleDeleteDialog(state) {
-      state.isDeleteDialogOpen = !state.isDeleteDialogOpen;
-    },
     setDataPolllistTable(state, action) {
       state.dataPolllistTable = action.payload;
-    },
-    setCurrentPage(state, action) {
-      state.currentPage = action.payload;
     },
     setIdPollDelete(state, action) {
       state.idPollDelete = action.payload;
@@ -41,48 +30,62 @@ export const slice = createSlice({
     setCountPage(state, action) {
       state.countPage = action.payload;
     },
+    setIdPollDetail(state, action) {
+      state.idPollDetail = action.payload;
+    },
   },
 });
 
-export const deletePollRequest = () => async (dispatch, getState) => {
-  let idPollDelete = getState().polllist.idPollDelete;
-  axios
-    .delete(`${ApiDelete}/${idPollDelete}`, {
-      headers: {
-        Authorization: `Bearer  ${accessToken}`,
-      },
-    })
-    .then((respon) => console.log(respon))
-    .catch((err) => console.log(err));
+export const {
+  setCountPage,
+  setDataPolllistTable,
+  setIdPollDelete,
+  setSameQuery,
+  setQuery,
+  setIdPollDetail,
+} = slice.actions;
 
-  dispatch(polllistActions.setSameQuery());
-  // setSameQuery((prev) => !prev);
-};
+export const fetchDataPolllist =
+  (accessToken) => async (dispatch, getState) => {
+    let query = getState().polllist.query;
+    axios
+      .get(
+        `https://dev.oppi.live/api/admin/v1/polls?offset=${query}&limit=10&direction=desc&search=`,
+        {
+          headers: {
+            Authorization: `Bearer  ${accessToken}`,
+          },
+        }
+      )
+      .then((respon) => {
+        getPolllistData(respon.data.list).then((rows) => {
+          dispatch(setDataPolllistTable(rows));
+        });
+        let totalPage = respon.data.totalCount;
+        if (totalPage % 10 === 0) {
+          dispatch(setCountPage(totalPage / 10));
+        } else {
+          let countPage = (totalPage - (totalPage % 10)) / 10 + 1;
+          dispatch(setCountPage(countPage));
+        }
+      });
+  };
 
-export const polllistActions = slice.actions;
-export const fetchDataPolllist = () => async (dispatch, getState) => {
-  let query = getState().polllist.query;
-  axios
-    .get(
-      `https://dev.oppi.live/api/admin/v1/polls?offset=${query}&limit=10&direction=desc&search=`,
-      {
+export const deletePollRequest =
+  (accessToken) => async (dispatch, getState) => {
+    let idPollDelete = getState().polllist.idPollDelete;
+    axios
+      .delete(`${ApiDelete}/${idPollDelete}`, {
         headers: {
           Authorization: `Bearer  ${accessToken}`,
         },
-      }
-    )
-    .then((respon) => {
-      getPolllistData(respon.data.list).then((rows) => {
-        dispatch(polllistActions.setDataPolllistTable(rows));
-      });
-      let totalPage = respon.data.totalCount;
-      if (totalPage % 10 === 0) {
-        dispatch(polllistActions.setCountPage(totalPage / 10));
-      } else {
-        let countPage = (totalPage - (totalPage % 10)) / 10 + 1;
-        dispatch(polllistActions.setCountPage(countPage));
-      }
-    });
-};
-
+      })
+      .then((respon) => {
+        if (respon.status === 200) {
+          dispatch(setSameQuery());
+          console.log("Delete success");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 export default slice.reducer;

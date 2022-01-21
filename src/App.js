@@ -1,6 +1,8 @@
 import "./App.css";
+import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
+import { createBrowserHistory } from "history";
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import LogIn from "./containers/Login";
 import Polllist from "./containers/Polllist";
 import PollDetail from "./containers/PollDetail";
@@ -9,12 +11,14 @@ import ProtectedRoute from "./components/ProtectedRoute.js";
 import { accessToken } from "./components/Utils";
 import { Navigate } from "react-router-dom";
 
+export const history = createBrowserHistory();
+
 function App() {
   const cacheUrl = localStorage.getItem("CACHED_URL");
   return (
     <React.Fragment>
       <GlobalStyle />
-      <Router>
+      <HistoryRouter history={history}>
         <Routes>
           <Route
             path="/"
@@ -38,7 +42,7 @@ function App() {
             }
           ></Route>
         </Routes>
-      </Router>
+      </HistoryRouter>
     </React.Fragment>
   );
 }
