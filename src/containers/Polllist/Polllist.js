@@ -13,11 +13,15 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { StyledTable, CardTable } from "../../components/styles/styled";
+import { useSelector, useDispatch } from "react-redux";
+import { polllistActions } from "./reducer";
 
 function Polllist() {
   const accessToken = sessionStorage.getItem("AdminAccessToken");
   const navigate = useNavigate();
-  const [query, setQuery] = useState(0);
+  const dispatch = useDispatch();
+  const polllistState = useSelector((state) => state.polllist);
+  // const [query, setQuery] = useState(0);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [dataPolllistTable, setDataPolllistTable] = useState();
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +37,8 @@ function Polllist() {
   //Change page in Pagination: reset current page index and re-render polllist
   const handleChangePage = (page) => {
     setCurrentPage(page);
-    setQuery((page - 1) * 10);
+    dispatch(polllistActions.setQuery((page - 1) * 10));
+    // setQuery((page - 1) * 10);
   };
 
   //Handle when click Cancel/click into space
@@ -64,7 +69,7 @@ function Polllist() {
   useEffect(() => {
     axios
       .get(
-        `https://dev.oppi.live/api/admin/v1/polls?offset=${query}&limit=10&direction=desc&search=`,
+        `https://dev.oppi.live/api/admin/v1/polls?offset=${polllistState.query}&limit=10&direction=desc&search=`,
         {
           headers: {
             Authorization: `Bearer  ${accessToken}`,
@@ -80,7 +85,7 @@ function Polllist() {
           setCountPage((totalPage - (totalPage % 10)) / 10 + 1);
         }
       });
-  }, [query, sameQuery]);
+  }, [polllistState.query, sameQuery]);
   return (
     <div className="pollist">
       {/* Log out Section */}

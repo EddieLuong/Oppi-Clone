@@ -1,3 +1,3 @@
-import LogIn from "./LogIn.tsx";
+import LogIn from "./LogIn.js";
 
 export default LogIn;
