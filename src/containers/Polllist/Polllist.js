@@ -14,11 +14,10 @@ import { useNavigate } from "react-router-dom";
 import { StyledTable, CardTable } from "../../components/styles/styled";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  setIdPollDelete,
   setQuery,
   deletePollRequest,
   fetchDataPolllist,
-  setIdPollDetail,
+  setPollId,
 } from "./reducer";
 
 function Polllist() {
@@ -47,7 +46,7 @@ function Polllist() {
   const onRowClick = (event, rowData) => {
     event.stopPropagation();
     async function setId() {
-      dispatch(setIdPollDetail(rowData.id));
+      dispatch(setPollId(rowData.id));
     }
     setId().then(() => {
       navigate("/polldetail");
@@ -55,16 +54,11 @@ function Polllist() {
   };
 
   //map data to array before set to data Material prop
-  const editable = polllistState.dataPolllistTable.map((row) => ({ ...row }));
+  const dataTable = polllistState.dataPolllistTable.map((row) => ({ ...row }));
 
   useEffect(() => {
     dispatch(fetchDataPolllist(accessToken));
-  }, [
-    dispatch,
-    accessToken,
-    polllistState.query,
-    polllistState.dataPolllistTable,
-  ]);
+  }, [polllistState.query, polllistState.dataPolllistTable]);
   return (
     <div className="pollist">
       {/* Log out Section */}
@@ -73,7 +67,7 @@ function Polllist() {
       <CardTable>
         <StyledTable
           columns={columns}
-          data={editable}
+          data={dataTable}
           onRowClick={onRowClick}
           options={{
             toolbar: false,
@@ -129,7 +123,7 @@ function Polllist() {
                 }}
                 onClick={(event) => {
                   setIsDeleteDialogOpen(true);
-                  dispatch(setIdPollDelete(props.data.id));
+                  dispatch(setPollId(props.data.id));
                   event.stopPropagation();
                 }}
               >
@@ -143,7 +137,7 @@ function Polllist() {
       </CardTable>
       <Pagination
         className="pagination"
-        count={polllistState.countPage}
+        count={polllistState.pageCount}
         color="primary"
         variant="outlined"
         size="large"

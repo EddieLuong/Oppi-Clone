@@ -12,8 +12,8 @@ import { useForm, Controller } from "react-hook-form";
 import { Switch } from "antd";
 import Header from "../../components/Header";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchDataPoll, sendPutRequest } from "./reducer";
-import { fields } from "../../Utils";
+import { fetchDataPoll, sendPutRequest } from "../Login/reducertail/reducer";
+import { fields } from "../../components/Utils";
 
 function PollDetail() {
   // const idPollDetail = useSelector((state) => state.polllist.idPollDetail);
@@ -67,7 +67,7 @@ function PollDetail() {
         } else setValue(field, dataPoll[field] ? dataPoll[field] : "");
       });
     });
-  }, [dispatch, setValue, accessToken, dataPoll]);
+  }, [setValue, dataPoll]);
 
   return (
     <React.Fragment>

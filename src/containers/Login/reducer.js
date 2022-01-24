@@ -16,7 +16,7 @@ export const slice = createSlice({
   },
 });
 
-export const sendSignInRequest = (data) => async (dispatch) => {
+export const sendSignInRequest = (data) => (dispatch) => {
   axios
     .post(ApiSignIn, data)
     .then((res) => {

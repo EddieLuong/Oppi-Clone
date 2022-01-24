@@ -19,9 +19,9 @@ export const slice = createSlice({
 export const { setDataPoll } = slice.actions;
 
 export const fetchDataPoll = (accessToken) => async (dispatch, getState) => {
-  let idPollDetail = getState().polllist.idPollDetail;
+  let pollId = getState().polllist.pollId;
   axios
-    .get(`${ApiPollDetail}/${idPollDetail}`, {
+    .get(`${ApiPollDetail}/${pollId}`, {
       headers: {
         Authorization: `Bearer  ${accessToken}`,
       },
@@ -34,29 +34,28 @@ export const fetchDataPoll = (accessToken) => async (dispatch, getState) => {
     .catch((e) => console.log(e));
 };
 
-export const sendPutRequest =
-  (data, accessToken) => async (dispatch, getState) => {
-    let idPollDetail = getState().polllist.idPollDetail;
-    const dataPoll = getState().polldetail.dataPoll;
-    if (data.title && data.question && data.description) {
-      const dataSend = {
-        ...dataPoll,
-        name: data.title.trim(),
-        question: data.question.trim(),
-        description: data.description.trim(),
-        is_turn_on_intergration_setting: true,
-        passcode: "2123124",
-      };
-      axios({
-        method: "put",
-        url: `https://dev.oppi.live/api/admin/v1/polls/${idPollDetail}`,
-        headers: {
-          Authorization: `Bearer  ${accessToken}`,
-        },
-        data: dataSend,
-      });
-      dispatch(setDataPoll(dataSend));
-    }
-  };
+export const sendPutRequest = (data, accessToken) => (dispatch, getState) => {
+  let pollId = getState().polllist.pollId;
+  const dataPoll = getState().polldetail.dataPoll;
+  if (data.title && data.question && data.description) {
+    const dataSend = {
+      ...dataPoll,
+      name: data.title.trim(),
+      question: data.question.trim(),
+      description: data.description.trim(),
+      is_turn_on_intergration_setting: true,
+      passcode: "2123124",
+    };
+    axios({
+      method: "put",
+      url: `https://dev.oppi.live/api/admin/v1/polls/${pollId}`,
+      headers: {
+        Authorization: `Bearer  ${accessToken}`,
+      },
+      data: dataSend,
+    });
+    dispatch(setDataPoll(dataSend));
+  }
+};
 
 export default slice.reducer;

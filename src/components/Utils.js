@@ -1,7 +1,7 @@
 const ApiSignIn = "https://dev.oppi.live/api/admin/v1/auth/signin";
 const accessToken = sessionStorage.getItem("AdminAccessToken");
 const ApiLogOut = "https://dev.oppi.live/api/admin/v1/auth/signout";
-const ApiDelete = "https://dev.oppi.live/api/admin/v1/polls";
+const deletePoll = "https://dev.oppi.live/api/admin/v1/polls";
 const ApiPollDetail = "https://dev.oppi.live/api/admin/v1/polls";
 export const fields = [
   "title",
@@ -118,6 +118,6 @@ export {
   columns,
   accessToken,
   ApiLogOut,
-  ApiDelete,
+  deletePoll,
   ApiPollDetail,
 };

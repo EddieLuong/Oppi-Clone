@@ -1,13 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiDelete, getPolllistData } from "../../components/Utils";
+import { deletePoll, getPolllistData } from "../../components/Utils";
 
 const initialState = {
   query: 0,
   dataPolllistTable: [],
-  idPollDelete: 0,
-  idPollDetail: 0,
-  countPage: 0,
+  pollId: 0,
+  pageCount: 0,
   sameQuery: false,
 };
 
@@ -21,17 +20,14 @@ export const slice = createSlice({
     setDataPolllistTable(state, action) {
       state.dataPolllistTable = action.payload;
     },
-    setIdPollDelete(state, action) {
-      state.idPollDelete = action.payload;
+    setPollId(state, action) {
+      state.pollId = action.payload;
     },
     setSameQuery(state) {
       state.sameQuery = !state.sameQuery;
     },
     setCountPage(state, action) {
-      state.countPage = action.payload;
-    },
-    setIdPollDetail(state, action) {
-      state.idPollDetail = action.payload;
+      state.pageCount = action.payload;
     },
   },
 });
@@ -39,10 +35,9 @@ export const slice = createSlice({
 export const {
   setCountPage,
   setDataPolllistTable,
-  setIdPollDelete,
+  setPollId,
   setSameQuery,
   setQuery,
-  setIdPollDetail,
 } = slice.actions;
 
 export const fetchDataPolllist =
@@ -73,9 +68,9 @@ export const fetchDataPolllist =
 
 export const deletePollRequest =
   (accessToken) => async (dispatch, getState) => {
-    let idPollDelete = getState().polllist.idPollDelete;
+    let idPollDelete = getState().polllist.pollId;
     axios
-      .delete(`${ApiDelete}/${idPollDelete}`, {
+      .delete(`${deletePoll}/${idPollDelete}`, {
         headers: {
           Authorization: `Bearer  ${accessToken}`,
         },
