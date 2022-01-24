@@ -1,35 +1,29 @@
-import { ApiPollDetail, formatDate } from "../../components/Utils";
+import { formatDate } from "../../components/Utils";
 import { Typography, Button } from "@material-ui/core";
 import { MuiTextfield } from "../../components/styles/styled";
 import FormHelperText from "@mui/material/FormHelperText";
 import DatePicker from "@mui/lab/DatePicker";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 import { Switch } from "antd";
 import Header from "../../components/Header";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchDataPoll, sendPutRequest } from "../Login/reducertail/reducer";
+import { fields } from "../../components/Utils";
 
 function PollDetail() {
-  const [dataPoll, setDataPoll] = useState({});
-  const [startDate, setStartDate] = useState(0);
-  const [isPublicResult, setIsPublicResult] = useState(false);
-  const idPollDetail = sessionStorage.getItem("idPollDetail");
+  // const idPollDetail = useSelector((state) => state.polllist.idPollDetail);
+  const dispatch = useDispatch();
+  const dataPoll = useSelector((state) => state.polldetail.dataPoll);
+  // const [dataPoll, setDataPoll] = useState({});
+  // const [startDate, setStartDate] = useState(0);
+  // const [isPublicResult, setIsPublicResult] = useState(false);
   const accessToken = sessionStorage.getItem("AdminAccessToken");
 
-  const fields = [
-    "title",
-    "question",
-    "description",
-    "openedAt",
-    "closedAt",
-    "isPublicResult",
-    "resultRedirectUrl",
-    "isRequireEmail",
-  ];
   const schema = Yup.object().shape({
     title: Yup.string()
       .max(80, "Poll Name must be less than 80 characters.")
@@ -55,50 +49,25 @@ function PollDetail() {
     resolver: yupResolver(schema),
   });
   const onSubmit = (data) => {
-    if (data.title && data.question && data.description) {
-      const dataSend = {
-        ...dataPoll,
-        name: data.title.trim(),
-        question: data.question.trim(),
-        description: data.description.trim(),
-        is_turn_on_intergration_setting: true,
-        passcode: "2123124",
-      };
-      axios({
-        method: "put",
-        url: `https://dev.oppi.live/api/admin/v1/polls/${idPollDetail}`,
-        headers: {
-          Authorization: `Bearer  ${accessToken}`,
-        },
-        data: dataSend,
-      });
-      setDataPoll(dataSend);
-    }
+    dispatch(sendPutRequest(data, accessToken));
   };
 
   useEffect(() => {
-    axios
-      .get(`${ApiPollDetail}/${idPollDetail}`, {
-        headers: {
-          Authorization: `Bearer  ${accessToken}`,
-        },
-      })
-      .then((respon) => {
-        if (respon.status === 200) {
-          setDataPoll(respon.data);
-          fields.forEach((field) => {
-            if (field === "openedAt" || field === "closedAt") {
-              setValue(
-                field,
-                formatDate(respon.data[field], { format: "YYYY-MM-DD" })
-              );
-            } else
-              setValue(field, respon.data[field] ? respon.data[field] : "");
-          });
-        }
-      })
-      .catch((e) => console.log(e));
-  }, []);
+    async function fetchData() {
+      dispatch(fetchDataPoll(accessToken));
+    }
+    fetchData().then(() => {
+      console.log(dataPoll);
+      fields.forEach((field) => {
+        if (field === "openedAt" || field === "closedAt") {
+          setValue(
+            field,
+            formatDate(dataPoll[field], { format: "YYYY-MM-DD" })
+          );
+        } else setValue(field, dataPoll[field] ? dataPoll[field] : "");
+      });
+    });
+  }, [setValue, dataPoll]);
 
   return (
     <React.Fragment>
@@ -241,7 +210,7 @@ function PollDetail() {
                       <DatePicker
                         onChange={onChange}
                         value={value}
-                        minDate={new Date(startDate)}
+                        minDate={new Date(dataPoll.openedAt)}
                         renderInput={(params) => (
                           <MuiTextfield
                             className="textfield labelDate"
@@ -289,7 +258,7 @@ function PollDetail() {
                 control={control}
                 render={({ field: { onChange, value } }) => (
                   <MuiTextfield
-                    disabled={isPublicResult}
+                    disabled={dataPoll.isPublicResult}
                     className="textfield"
                     id="zeropadding"
                     onChange={onChange}

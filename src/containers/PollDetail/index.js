@@ -1,3 +1,3 @@
-import PollDetail from "./PollDetail.js";
+import PollDetail from "../Login/PollDetail.js";
 
 export default PollDetail;
