@@ -12,18 +12,12 @@ import { useForm, Controller } from "react-hook-form";
 import { Switch } from "antd";
 import Header from "../../components/Header";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchDataPoll, sendPutRequest } from "../Login/reducertail/reducer";
+import { fetchDataPoll, sendPutRequest } from "./reducer";
 import { fields } from "../../components/Utils";
 
 function PollDetail() {
-  // const idPollDetail = useSelector((state) => state.polllist.idPollDetail);
   const dispatch = useDispatch();
   const dataPoll = useSelector((state) => state.polldetail.dataPoll);
-  // const [dataPoll, setDataPoll] = useState({});
-  // const [startDate, setStartDate] = useState(0);
-  // const [isPublicResult, setIsPublicResult] = useState(false);
-  const accessToken = sessionStorage.getItem("AdminAccessToken");
-
   const schema = Yup.object().shape({
     title: Yup.string()
       .max(80, "Poll Name must be less than 80 characters.")
@@ -49,26 +43,19 @@ function PollDetail() {
     resolver: yupResolver(schema),
   });
   const onSubmit = (data) => {
-    dispatch(sendPutRequest(data, accessToken));
+    dispatch(sendPutRequest(data));
   };
+  useEffect(() => {
+    fields.forEach((field) => {
+      if (field === "openedAt" || field === "closedAt") {
+        setValue(field, formatDate(dataPoll[field], { format: "YYYY-MM-DD" }));
+      } else setValue(field, dataPoll[field] ? dataPoll[field] : "");
+    });
+  }, [dataPoll]);
 
   useEffect(() => {
-    async function fetchData() {
-      dispatch(fetchDataPoll(accessToken));
-    }
-    fetchData().then(() => {
-      console.log(dataPoll);
-      fields.forEach((field) => {
-        if (field === "openedAt" || field === "closedAt") {
-          setValue(
-            field,
-            formatDate(dataPoll[field], { format: "YYYY-MM-DD" })
-          );
-        } else setValue(field, dataPoll[field] ? dataPoll[field] : "");
-      });
-    });
-  }, [setValue, dataPoll]);
-
+    dispatch(fetchDataPoll());
+  }, []);
   return (
     <React.Fragment>
       {/* Log out Section */}

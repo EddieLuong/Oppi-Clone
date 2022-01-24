@@ -7,7 +7,6 @@ const initialState = {
   dataPolllistTable: [],
   pollId: 0,
   pageCount: 0,
-  sameQuery: false,
 };
 
 export const slice = createSlice({
@@ -23,22 +22,14 @@ export const slice = createSlice({
     setPollId(state, action) {
       state.pollId = action.payload;
     },
-    setSameQuery(state) {
-      state.sameQuery = !state.sameQuery;
-    },
-    setCountPage(state, action) {
+    setPageCount(state, action) {
       state.pageCount = action.payload;
     },
   },
 });
 
-export const {
-  setCountPage,
-  setDataPolllistTable,
-  setPollId,
-  setSameQuery,
-  setQuery,
-} = slice.actions;
+export const { setPageCount, setDataPolllistTable, setPollId, setQuery } =
+  slice.actions;
 
 export const fetchDataPolllist =
   (accessToken) => async (dispatch, getState) => {
@@ -58,26 +49,25 @@ export const fetchDataPolllist =
         });
         let totalPage = respon.data.totalCount;
         if (totalPage % 10 === 0) {
-          dispatch(setCountPage(totalPage / 10));
+          dispatch(setPageCount(totalPage / 10));
         } else {
           let countPage = (totalPage - (totalPage % 10)) / 10 + 1;
-          dispatch(setCountPage(countPage));
+          dispatch(setPageCount(countPage));
         }
       });
   };
 
 export const deletePollRequest =
   (accessToken) => async (dispatch, getState) => {
-    let idPollDelete = getState().polllist.pollId;
+    let pollId = getState().polllist.pollId;
     axios
-      .delete(`${deletePoll}/${idPollDelete}`, {
+      .delete(`${deletePoll}/${pollId}`, {
         headers: {
           Authorization: `Bearer  ${accessToken}`,
         },
       })
       .then((respon) => {
         if (respon.status === 200) {
-          dispatch(setSameQuery());
           console.log("Delete success");
         }
       })

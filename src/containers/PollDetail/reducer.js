@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ApiPollDetail } from "../../components/Utils";
 import axios from "axios";
+import { accessToken } from "../../components/Utils";
 
 const initialState = {
   dataPoll: {},
@@ -18,7 +19,7 @@ export const slice = createSlice({
 
 export const { setDataPoll } = slice.actions;
 
-export const fetchDataPoll = (accessToken) => async (dispatch, getState) => {
+export const fetchDataPoll = () => (dispatch, getState) => {
   let pollId = getState().polllist.pollId;
   axios
     .get(`${ApiPollDetail}/${pollId}`, {
@@ -28,13 +29,13 @@ export const fetchDataPoll = (accessToken) => async (dispatch, getState) => {
     })
     .then((respon) => {
       if (respon.status === 200) {
-        setDataPoll(respon.data);
+        dispatch(setDataPoll(respon.data));
       }
     })
     .catch((e) => console.log(e));
 };
 
-export const sendPutRequest = (data, accessToken) => (dispatch, getState) => {
+export const sendPutRequest = (data) => (dispatch, getState) => {
   let pollId = getState().polllist.pollId;
   const dataPoll = getState().polldetail.dataPoll;
   if (data.title && data.question && data.description) {

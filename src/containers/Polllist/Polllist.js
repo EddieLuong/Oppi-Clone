@@ -21,8 +21,8 @@ import {
 } from "./reducer";
 
 function Polllist() {
-  const accessToken = sessionStorage.getItem("AdminAccessToken");
   const navigate = useNavigate();
+  const accessToken = sessionStorage.getItem("AdminAccessToken");
   const dispatch = useDispatch();
   const polllistState = useSelector((state) => state.polllist);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -40,25 +40,21 @@ function Polllist() {
   //Delete Poll
   const handleDeletePoll = () => {
     dispatch(deletePollRequest(accessToken));
+    setIsDeleteDialogOpen(false);
     dispatch(fetchDataPolllist(accessToken));
   };
   //Show poll detail when click on row
   const onRowClick = (event, rowData) => {
     event.stopPropagation();
-    async function setId() {
-      dispatch(setPollId(rowData.id));
-    }
-    setId().then(() => {
-      navigate("/polldetail");
-    });
+    dispatch(setPollId(rowData.id));
+    navigate("/polldetail");
   };
-
   //map data to array before set to data Material prop
   const dataTable = polllistState.dataPolllistTable.map((row) => ({ ...row }));
 
   useEffect(() => {
     dispatch(fetchDataPolllist(accessToken));
-  }, [polllistState.query, polllistState.dataPolllistTable]);
+  }, [polllistState.query]);
   return (
     <div className="pollist">
       {/* Log out Section */}
