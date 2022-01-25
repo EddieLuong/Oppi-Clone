@@ -8,12 +8,11 @@ import Polllist from "./containers/Polllist";
 import PollDetail from "./containers/PollDetail";
 import GlobalStyle from "./components/styles/globalStyles";
 import ProtectedRoute from "./components/ProtectedRoute.js";
-import { accessToken } from "./components/Utils";
 import { Navigate } from "react-router-dom";
-
 export const history = createBrowserHistory();
 
 function App() {
+  const accessToken = sessionStorage.getItem("AdminAccessToken");
   const cacheUrl = localStorage.getItem("CACHED_URL");
   return (
     <React.Fragment>
@@ -34,7 +33,7 @@ function App() {
           ></Route>
 
           <Route
-            path="/polldetail"
+            path={`/poll-detail/:pollId`}
             element={
               <ProtectedRoute>
                 <PollDetail />

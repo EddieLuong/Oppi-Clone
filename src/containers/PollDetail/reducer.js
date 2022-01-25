@@ -18,24 +18,24 @@ export const slice = createSlice({
 
 export const { setDataPoll } = slice.actions;
 
-export const fetchDataPoll = (accessToken) => async (dispatch, getState) => {
-  let pollId = getState().polllist.pollId;
+export const fetchDataPoll = (id) => (dispatch, getState) => {
+  const accessToken = sessionStorage.getItem("AdminAccessToken");
   axios
-    .get(`${ApiPollDetail}/${pollId}`, {
+    .get(`${ApiPollDetail}/${id}`, {
       headers: {
         Authorization: `Bearer  ${accessToken}`,
       },
     })
     .then((respon) => {
       if (respon.status === 200) {
-        setDataPoll(respon.data);
+        dispatch(setDataPoll(respon.data));
       }
     })
     .catch((e) => console.log(e));
 };
 
-export const sendPutRequest = (data, accessToken) => (dispatch, getState) => {
-  let pollId = getState().polllist.pollId;
+export const sendPutRequest = (data, id) => (dispatch, getState) => {
+  const accessToken = sessionStorage.getItem("AdminAccessToken");
   const dataPoll = getState().polldetail.dataPoll;
   if (data.title && data.question && data.description) {
     const dataSend = {
@@ -48,7 +48,7 @@ export const sendPutRequest = (data, accessToken) => (dispatch, getState) => {
     };
     axios({
       method: "put",
-      url: `https://dev.oppi.live/api/admin/v1/polls/${pollId}`,
+      url: `https://dev.oppi.live/api/admin/v1/polls/${id}`,
       headers: {
         Authorization: `Bearer  ${accessToken}`,
       },
