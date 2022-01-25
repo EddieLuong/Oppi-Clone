@@ -11,8 +11,10 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { MButton, StyledPopper, DialogLogout } from "./styles/styled";
 import axios from "axios";
-import { ApiLogOut } from "../components/Utils";
 import { useNavigate } from "react-router-dom";
+import { API_LOGOUT } from "../constants/api";
+import { ADMIN_TOKEN } from "../constants/localStorage";
+import clientPath from "../constants/clientPath";
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -34,12 +36,11 @@ export default function Header() {
   //Handle Logout
   const handleLogOut = () => {
     axios
-      .post(ApiLogOut)
+      .post(API_LOGOUT)
       .then((respon) => {
         if (respon.status === 200) {
-          sessionStorage.removeItem("AdminAccessToken");
-          // localStorage.removeItem("CACHED_URL");
-          navigate("/");
+          sessionStorage.removeItem(ADMIN_TOKEN);
+          navigate(clientPath.LOGIN);
         }
       })
       .catch((e) => console.log(e));

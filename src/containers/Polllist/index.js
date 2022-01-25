@@ -1,3 +1,3 @@
-import Polllist from "./Polllist.js";
+import Polllist from "./Polllist";
 
 export default Polllist;

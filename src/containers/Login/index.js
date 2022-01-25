@@ -1,3 +1,3 @@
-import LogIn from "./LogIn.js";
+import LogIn from "./LogIn";
 
 export default LogIn;
