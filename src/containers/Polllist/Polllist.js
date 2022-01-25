@@ -27,7 +27,6 @@ function Polllist() {
   const polllistState = useSelector((state) => state.polllist);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
   //Change page in Pagination: reset current page index and re-render polllist
   const handleChangePage = (page) => {
     setCurrentPage(page);
@@ -47,7 +46,7 @@ function Polllist() {
   const onRowClick = (event, rowData) => {
     event.stopPropagation();
     dispatch(setPollId(rowData.id));
-    navigate("/polldetail");
+    navigate(`/poll-detail/${polllistState.pollId}`);
   };
   //map data to array before set to data Material prop
   const dataTable = polllistState.dataPolllistTable.map((row) => ({ ...row }));

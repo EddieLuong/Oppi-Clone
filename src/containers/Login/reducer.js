@@ -5,7 +5,9 @@ import { history } from "../../App";
 
 const initialState = {
   errorMessage: "",
+  status: null,
 };
+
 export const slice = createSlice({
   name: "login",
   initialState,
@@ -15,6 +17,16 @@ export const slice = createSlice({
     },
   },
 });
+
+// export const sendSignInRequest = createAsyncThunk(
+//   "login/sendSignInRequest",
+//   async () => {
+//     return {
+//       axios
+//           .post(AipSignIn, data)
+//     }
+//   }
+// );
 
 export const sendSignInRequest = (data) => (dispatch) => {
   axios
