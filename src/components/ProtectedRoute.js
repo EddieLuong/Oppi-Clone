@@ -8,19 +8,21 @@ function ProtectedRoute({ children }) {
   const accessToken = sessionStorage.getItem(ADMIN_TOKEN);
   const isLoggedIn = Boolean(accessToken);
 
-  if (!isLoggedIn) {
-    localStorage.setItem(CACHED_URL, location.pathname);
-  }
-  const cacheUrl = localStorage.getItem(CACHED_URL);
+  localStorage.setItem(CACHED_URL, location.pathname);
+  const cachedUrl = localStorage.getItem(CACHED_URL);
 
-  if (isLoggedIn && !cacheUrl) {
+  if (isLoggedIn) {
     return children;
   }
-  if (isLoggedIn && cacheUrl) {
-    localStorage.removeItem(CACHED_URL);
-    return <Navigate to={cacheUrl} />;
+  if (isLoggedIn && cachedUrl) {
+    return <Navigate to={cachedUrl} />;
   }
-
+  if (!isLoggedIn && cachedUrl) {
+    localStorage.removeItem(CACHED_URL);
+    return <Navigate to={clientPath.LOGIN} />;
+  }
   return <Navigate to={clientPath.LOGIN} />;
 }
+
+
 export default ProtectedRoute;

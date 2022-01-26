@@ -12,11 +12,13 @@ import {
 } from "../../components/styles/styled";
 import { useAppDispatch, useAppSelector } from "../../redux/consumeHook.ts";
 import { sendSignInRequest, setErrorMessage } from "./reducer";
+import { useNavigate } from "react-router-dom";
+import clientPath from "../../constants/clientPath";
 
 function LogIn() {
   const dispatch = useAppDispatch();
-
   const { errorMessage } = useAppSelector((state) => state.login);
+  const navigate = useNavigate();
 
   const schema = Yup.object().shape({
     email: Yup.string()
@@ -32,8 +34,13 @@ function LogIn() {
     },
     resolver: yupResolver(schema),
   });
-  const onSubmit = async (data) => {
-    dispatch(sendSignInRequest(data));
+  const onSubmit = (data) => {
+    //sendSignInRequest is a "asyncThunk"
+    dispatch(sendSignInRequest(data))
+      .unwrap() //must add unwrap(). If you not add, function in .then still call when request failed.
+      .then(() => {
+        navigate(clientPath.POLLLIST);
+      });
   };
   return (
     <Wrapper>

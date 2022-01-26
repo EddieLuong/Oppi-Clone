@@ -1,8 +1,6 @@
 import "./App.css";
-import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
-import { createBrowserHistory } from "history";
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import LogIn from "./containers/Login";
 import Polllist from "./containers/Polllist";
 import PollDetail from "./containers/PollDetail";
@@ -11,20 +9,20 @@ import ProtectedRoute from "./components/ProtectedRoute.js";
 import { Navigate } from "react-router-dom";
 import { ADMIN_TOKEN, CACHED_URL } from "./constants/localStorage";
 import clientPath from "./constants/clientPath";
-export const history = createBrowserHistory();
 
 function App() {
   const { LOGIN, POLLLIST, POLLDETAIL, ROOT } = clientPath;
   const accessToken = sessionStorage.getItem(ADMIN_TOKEN);
-  const cacheUrl = localStorage.getItem(CACHED_URL);
+  const cachedUrl = localStorage.getItem(CACHED_URL);
   return (
     <React.Fragment>
       <GlobalStyle />
-      <HistoryRouter history={history}>
+      <Router>
         <Routes>
+          <Route path={ROOT} element={<Navigate to={LOGIN} />}></Route>
           <Route
             path={LOGIN}
-            element={accessToken ? <Navigate to={cacheUrl} /> : <LogIn />}
+            element={accessToken ? <Navigate to={cachedUrl} /> : <LogIn />}
           ></Route>
           <Route
             path={POLLLIST}
@@ -43,9 +41,8 @@ function App() {
               </ProtectedRoute>
             }
           ></Route>
-          <Route path={ROOT} element={<Navigate to={LOGIN} />}></Route>
         </Routes>
-      </HistoryRouter>
+      </Router>
     </React.Fragment>
   );
 }
