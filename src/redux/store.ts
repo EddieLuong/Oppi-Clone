@@ -3,7 +3,13 @@ import rootReducer from "./reducer";
 
 
 const store = configureStore({
-  reducer:rootReducer
+  reducer:rootReducer,
+  middleware: (getDefaultMiddleware) =>
+  getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: ['login/sendSignInRequest/fulfilled'],
+    },
+  }),
 });
 
 
