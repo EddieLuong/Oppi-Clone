@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { ApiPollDetail } from "../../components/Utils";
 import axios from "axios";
+import { API_POLL } from "../../constants/api";
+import intercept from "../../axios/interceptors";
 
 const initialState = {
   dataPoll: {},
@@ -19,13 +20,9 @@ export const slice = createSlice({
 export const { setDataPoll } = slice.actions;
 
 export const fetchDataPoll = (id) => (dispatch, getState) => {
-  const accessToken = sessionStorage.getItem("AdminAccessToken");
+  intercept();
   axios
-    .get(`${ApiPollDetail}/${id}`, {
-      headers: {
-        Authorization: `Bearer  ${accessToken}`,
-      },
-    })
+    .get(`${API_POLL}/${id}`)
     .then((respon) => {
       if (respon.status === 200) {
         dispatch(setDataPoll(respon.data));
@@ -35,7 +32,7 @@ export const fetchDataPoll = (id) => (dispatch, getState) => {
 };
 
 export const sendPutRequest = (data, id) => (dispatch, getState) => {
-  const accessToken = sessionStorage.getItem("AdminAccessToken");
+  intercept();
   const dataPoll = getState().polldetail.dataPoll;
   if (data.title && data.question && data.description) {
     const dataSend = {
@@ -48,10 +45,7 @@ export const sendPutRequest = (data, id) => (dispatch, getState) => {
     };
     axios({
       method: "put",
-      url: `https://dev.oppi.live/api/admin/v1/polls/${id}`,
-      headers: {
-        Authorization: `Bearer  ${accessToken}`,
-      },
+      url: `${API_POLL}/${id}`,
       data: dataSend,
     });
     dispatch(setDataPoll(dataSend));

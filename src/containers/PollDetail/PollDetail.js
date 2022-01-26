@@ -20,7 +20,6 @@ function PollDetail() {
   const dispatch = useDispatch();
   const dataPoll = useSelector((state) => state.polldetail.dataPoll);
   const params = useParams();
-  const { pollId } = params;
   const schema = Yup.object().shape({
     title: Yup.string()
       .max(80, "Poll Name must be less than 80 characters.")
@@ -46,7 +45,7 @@ function PollDetail() {
     resolver: yupResolver(schema),
   });
   const onSubmit = (data) => {
-    dispatch(sendPutRequest(data, pollId));
+    dispatch(sendPutRequest(data, params.pollId));
   };
   useEffect(() => {
     fields.forEach((field) => {
@@ -57,8 +56,8 @@ function PollDetail() {
   }, [dataPoll]);
 
   useEffect(() => {
-    if (pollId) {
-      dispatch(fetchDataPoll(pollId));
+    if (params.pollId) {
+      dispatch(fetchDataPoll(params.pollId));
     }
   }, []);
   return (

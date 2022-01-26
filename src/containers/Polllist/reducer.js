@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { deletePoll, getPolllistData } from "../../components/Utils";
+import { getPolllistData } from "../../components/Utils";
+import { API_POLL } from "../../constants/api";
+import intercept from "../../axios/interceptors";
 
 const initialState = {
   query: 0,
@@ -32,17 +34,10 @@ export const { setPageCount, setDataPolllistTable, setPollId, setQuery } =
   slice.actions;
 
 export const fetchDataPolllist = () => (dispatch, getState) => {
-  const accessToken = sessionStorage.getItem("AdminAccessToken");
   let query = getState().polllist.query;
+  intercept();
   axios
-    .get(
-      `https://dev.oppi.live/api/admin/v1/polls?offset=${query}&limit=10&direction=desc&search=`,
-      {
-        headers: {
-          Authorization: `Bearer  ${accessToken}`,
-        },
-      }
-    )
+    .get(`${API_POLL}?offset=${query}&limit=10&direction=desc&search=`)
     .then((respon) => {
       getPolllistData(respon.data.list).then((rows) => {
         dispatch(setDataPolllistTable(rows));
@@ -59,13 +54,9 @@ export const fetchDataPolllist = () => (dispatch, getState) => {
 
 export const deletePollRequest = () => (dispatch, getState) => {
   let pollId = getState().polllist.pollId;
-  const accessToken = sessionStorage.getItem("AdminAccessToken");
+  intercept();
   axios
-    .delete(`${deletePoll}/${pollId}`, {
-      headers: {
-        Authorization: `Bearer  ${accessToken}`,
-      },
-    })
+    .delete(`${API_POLL}/${pollId}`)
     .then((respon) => {
       if (respon.status === 200) {
         console.log("Delete success");

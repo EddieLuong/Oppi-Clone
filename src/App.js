@@ -9,22 +9,25 @@ import PollDetail from "./containers/PollDetail";
 import GlobalStyle from "./components/styles/globalStyles";
 import ProtectedRoute from "./components/ProtectedRoute.js";
 import { Navigate } from "react-router-dom";
+import { ADMIN_TOKEN, CACHED_URL } from "./constants/localStorage";
+import clientPath from "./constants/clientPath";
 export const history = createBrowserHistory();
 
 function App() {
-  const accessToken = sessionStorage.getItem("AdminAccessToken");
-  const cacheUrl = localStorage.getItem("CACHED_URL");
+  const { LOGIN, POLLLIST, POLLDETAIL, ROOT } = clientPath;
+  const accessToken = sessionStorage.getItem(ADMIN_TOKEN);
+  const cacheUrl = localStorage.getItem(CACHED_URL);
   return (
     <React.Fragment>
       <GlobalStyle />
       <HistoryRouter history={history}>
         <Routes>
           <Route
-            path="/"
+            path={LOGIN}
             element={accessToken ? <Navigate to={cacheUrl} /> : <LogIn />}
           ></Route>
           <Route
-            path="/polllist"
+            path={POLLLIST}
             element={
               <ProtectedRoute>
                 <Polllist />
@@ -33,13 +36,14 @@ function App() {
           ></Route>
 
           <Route
-            path={`/poll-detail/:pollId`}
+            path={POLLDETAIL}
             element={
               <ProtectedRoute>
                 <PollDetail />
               </ProtectedRoute>
             }
           ></Route>
+          <Route path={ROOT} element={<Navigate to={LOGIN} />}></Route>
         </Routes>
       </HistoryRouter>
     </React.Fragment>

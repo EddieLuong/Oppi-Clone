@@ -1,12 +1,24 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ApiSignIn } from "../../components/Utils";
 import { history } from "../../App";
+import { API_SIGNIN } from "../../constants/api";
+import { ADMIN_TOKEN } from "../../constants/localStorage";
+import clientPath from "../../constants/clientPath";
 
 const initialState = {
   errorMessage: "",
   status: null,
 };
+
+// export const sendSignInRequest = createAsyncThunk(
+//   "login/sendSignInRequest",
+//   async (data) => {
+//     return axios
+//       .post(API_SIGNIN, data)
+//       .then((res) => res)
+//       .catch((error) => error);
+//   }
+// );
 
 export const slice = createSlice({
   name: "login",
@@ -16,26 +28,37 @@ export const slice = createSlice({
       state.errorMessage = action.payload;
     },
   },
+  // extraReducers: {
+  //   [sendSignInRequest.pending]: (state) => {
+  //     state.errorMessage = "Loading...";
+  //     state.status = "Loading...";
+  //   },
+  //   [sendSignInRequest.fulfilled]: (state, { payload }) => {
+  //     state.status = "Login success...";
+  //     state.errorMessage = "";
+  //     sessionStorage.setItem(ADMIN_TOKEN, payload.token);
+  //     // history.push(clientPath.POLLLIST);
+  //   },
+  //   [sendSignInRequest.rejected]: (state, { payload }) => {
+  //     state.status = "Login failed...";
+  //     console.log("rejected", payload);
+  //     if (payload.response.data.message === "Incorrect username or password") {
+  //       state.errorMessage = "Email or password is invalid, please try again.";
+  //     } else {
+  //       state.errorMessage = "";
+  //     }
+  //   },
+  // },
 });
-
-// export const sendSignInRequest = createAsyncThunk(
-//   "login/sendSignInRequest",
-//   async () => {
-//     return {
-//       axios
-//           .post(AipSignIn, data)
-//     }
-//   }
-// );
 
 export const sendSignInRequest = (data) => (dispatch) => {
   axios
-    .post(ApiSignIn, data)
+    .post(API_SIGNIN, data)
     .then((res) => {
       if (res.status === 200) {
         dispatch(setErrorMessage(""));
-        sessionStorage.setItem("AdminAccessToken", res.data.token);
-        history.push("/polllist");
+        sessionStorage.setItem(ADMIN_TOKEN, res.data.token);
+        history.push(clientPath.POLLLIST);
       }
     })
     .catch((e) => {
