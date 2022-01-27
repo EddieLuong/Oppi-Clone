@@ -1,6 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import rootReducer from "./reducer";
+import createSagaMiddleware  from "redux-saga"
+import rootSaga from "./saga" ;
 
+const sagaMiddleWare = createSagaMiddleware();
 
 const store = configureStore({
   reducer:rootReducer,
@@ -9,9 +12,10 @@ const store = configureStore({
     serializableCheck: {
       ignoredActions: ['login/sendSignInRequest/fulfilled'],
     },
-  }),
+  }).concat(sagaMiddleWare),
 });
 
+sagaMiddleWare.run(rootSaga);
 
 export type RootState = ReturnType<typeof store.getState>;
 
