@@ -1,7 +1,7 @@
 import { put, call, takeEvery, select } from "redux-saga/effects";
 import intercept from "../../axios/interceptors";
 import { fetchDataPollAction, setDataPoll, updatePollAction } from "./reducer";
-import { fetchDataPollDetail, updatePoll } from "../../service/pollDetail";
+import { fetchDataPollDetail, updatePoll } from "../../service/PollDetailService";
 import { STATUS_CODE } from "../../constants/status";
 
 function* fetchPollDetailWorker({ payload }) {
@@ -17,21 +17,23 @@ function* fetchPollDetailWorker({ payload }) {
   }
 }
 
-function* updatePollWorker(action) {
-  console.log(action);
-  // yield intercept();
-  // const dataPoll = select((state) => state.polldetail.dataPoll);
-  // if (payload.title && payload.question && payload.description) {
-  //   const dataUpdate = {
-  //     ...dataPoll,
-  //     name: payload.title.trim(),
-  //     question: payload.question.trim(),
-  //     description: payload.description.trim(),
-  //     // is_turn_on_intergration_setting: true,
-  //     // passcode: "2123124",
-  //   };
-  //   yield call(updatePoll, { id: payload.id, dataUpdate });
-  // }
+function* updatePollWorker({ payload: { data, pollId } }) {
+  console.log(data);
+  yield intercept();
+  const dataPoll = yield select((state) => state.polldetail.dataPoll);
+  if (data.title && data.question && data.description) {
+    const dataUpdate = {
+      ...dataPoll,
+      name: data.title.trim(),
+      question: data.question.trim(),
+      description: data.description.trim(),
+      is_turn_on_intergration_setting: true,
+      passcode: "2123124",
+    };
+    console.log(dataUpdate);
+    yield call(updatePoll, { pollId, dataUpdate });
+    yield put(fetchDataPollAction(pollId));
+  }
 }
 
 export default function* pollDetailSaga() {

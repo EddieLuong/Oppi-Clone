@@ -5,7 +5,7 @@ import {
   loginFail,
   setErrorMessage,
 } from "./reducer";
-import { login } from "../../service/login";
+import { login } from "../../service/LoginService";
 import { STATUS_CODE } from "../../constants/status";
 
 const invalidMessage = "Email or password is invalid, please try again.";

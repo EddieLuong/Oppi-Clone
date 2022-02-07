@@ -9,9 +9,7 @@ const store = configureStore({
   reducer:rootReducer,
   middleware: (getDefaultMiddleware) =>
   getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: ['login/sendSignInRequest/fulfilled'],
-    },
+    serializableCheck: false
   }).concat(sagaMiddleWare),
 });
 

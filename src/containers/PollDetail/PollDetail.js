@@ -45,7 +45,7 @@ function PollDetail() {
     resolver: yupResolver(schema),
   });
   const onSubmit = (data) => {
-    dispatch(updatePollAction(data, params.pollId));
+    dispatch(updatePollAction({ data, pollId: params.pollId }));
   };
   useEffect(() => {
     fields.forEach((field) => {

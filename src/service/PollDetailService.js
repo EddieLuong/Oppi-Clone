@@ -5,6 +5,6 @@ export function fetchDataPollDetail(id) {
   return axios.get(`${API_POLL}/${id}`);
 }
 
-export function updatePoll({ id, dataUpdate }) {
-  return axios.put(`${API_POLL}/${id}`, dataUpdate);
+export function updatePoll({ pollId, dataUpdate }) {
+  return axios.put(`${API_POLL}/${pollId}`, dataUpdate);
 }
