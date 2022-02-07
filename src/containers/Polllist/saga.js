@@ -5,16 +5,16 @@ import {
   setDataPolllistTable,
   setPageCount,
 } from "./reducer";
-import intercept from "../../axios/interceptors";
-import { fetchDataPolllist, deletePollRequest } from "../../service/PolllistService";
+import {
+  fetchDataPolllist,
+  deletePollRequest,
+} from "../../service/PolllistService";
 import { STATUS_CODE } from "../../constants/status";
 import { getPolllistData } from "../../components/Utils";
 
 function* fetchData() {
   const query = yield select((state) => state.polllist.query);
   try {
-    yield intercept();
-
     const response = yield call(fetchDataPolllist, query);
     if (response.status === STATUS_CODE.SUCCESS) {
       const rows = yield call(getPolllistData, response.data.list);
@@ -33,10 +33,8 @@ function* fetchData() {
 
 function* deletePoll() {
   const pollId = yield select((state) => state.polllist.pollId);
-  yield intercept();
 
   const response = yield call(deletePollRequest, pollId);
-
   if (response.status === STATUS_CODE.SUCCESS) {
     console.log(`Delete poll have poll id ${pollId} successfully`);
     yield put(fetchPolllistRequest());

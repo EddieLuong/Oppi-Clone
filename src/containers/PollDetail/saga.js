@@ -1,11 +1,12 @@
 import { put, call, takeEvery, select } from "redux-saga/effects";
-import intercept from "../../axios/interceptors";
 import { fetchDataPollAction, setDataPoll, updatePollAction } from "./reducer";
-import { fetchDataPollDetail, updatePoll } from "../../service/PollDetailService";
+import {
+  fetchDataPollDetail,
+  updatePoll,
+} from "../../service/PollDetailService";
 import { STATUS_CODE } from "../../constants/status";
 
 function* fetchPollDetailWorker({ payload }) {
-  yield intercept();
   try {
     const response = yield call(fetchDataPollDetail, payload);
 
@@ -18,8 +19,6 @@ function* fetchPollDetailWorker({ payload }) {
 }
 
 function* updatePollWorker({ payload: { data, pollId } }) {
-  console.log(data);
-  yield intercept();
   const dataPoll = yield select((state) => state.polldetail.dataPoll);
   if (data.title && data.question && data.description) {
     const dataUpdate = {
