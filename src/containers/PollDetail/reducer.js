@@ -14,22 +14,14 @@ export const slice = createSlice({
     setDataPoll(state, action) {
       state.dataPoll = action.payload;
     },
+    fetchDataPollAction(state, action) {},
+    updatePollAction(state, action) {},
   },
 });
 
-export const { setDataPoll } = slice.actions;
+export const { setDataPoll, fetchDataPollAction, updatePollAction } =
+  slice.actions;
 
-export const fetchDataPoll = (id) => (dispatch) => {
-  intercept();
-  axios
-    .get(`${API_POLL}/${id}`)
-    .then((respon) => {
-      if (respon.status === 200) {
-        dispatch(setDataPoll(respon.data));
-      }
-    })
-    .catch((e) => console.log(e));
-};
 
 export const sendPutRequest = (data, id) => (dispatch, getState) => {
   intercept();
