@@ -19,7 +19,7 @@ export const slice = createSlice({
 
 export const { setDataPoll } = slice.actions;
 
-export const fetchDataPoll = (id) => (dispatch, getState) => {
+export const fetchDataPoll = (id) => (dispatch) => {
   intercept();
   axios
     .get(`${API_POLL}/${id}`)
