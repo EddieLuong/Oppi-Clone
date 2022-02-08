@@ -24,8 +24,8 @@ function* fetchData() {
       if (totalPage % 10 === 0) {
         yield put(setPageCount(totalPage / 10));
       } else {
-        let countPage = (totalPage - (totalPage % 10)) / 10 + 1;
-        yield put(setPageCount(countPage));
+        let pageCount = (totalPage - (totalPage % 10)) / 10 + 1;
+        yield put(setPageCount(pageCount));
       }
     }
   } catch (error) {}

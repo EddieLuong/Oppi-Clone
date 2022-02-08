@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const initialState = {
   dataPoll: {},
 };
@@ -17,8 +16,10 @@ export const slice = createSlice({
   },
 });
 
-export const { setDataPoll, fetchDataPollAction, updatePollAction } =
-  slice.actions;
-
+export const {
+  setDataPoll,
+  fetchDataPollAction,
+  updatePollAction
+} = slice.actions;
 
 export default slice.reducer;

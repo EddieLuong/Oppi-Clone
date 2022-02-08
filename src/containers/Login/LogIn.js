@@ -50,9 +50,6 @@ function LogIn() {
     checkAndNavigate();
   }, [loginStatus]);
 
-  React.useEffect(() => {
-    checkAndNavigate();
-  }, []);
   return (
     <Wrapper>
       <Card>

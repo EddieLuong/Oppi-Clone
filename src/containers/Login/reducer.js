@@ -28,7 +28,11 @@ export const slice = createSlice({
   },
 });
 
-export const { setErrorMessage, loginRequest, loginSuccess, loginFail } =
-  slice.actions;
+export const {
+  setErrorMessage,
+  loginRequest,
+  loginSuccess,
+  loginFail
+} = slice.actions;
 
 export default slice.reducer;
