@@ -12,7 +12,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Switch } from "antd";
 import Header from "../../components/Header";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchDataPoll, sendPutRequest } from "./reducer";
+import { fetchDataPollAction, updatePollAction } from "./reducer";
 import { fields } from "../../components/Utils";
 import { useParams } from "react-router-dom";
 
@@ -45,7 +45,7 @@ function PollDetail() {
     resolver: yupResolver(schema),
   });
   const onSubmit = (data) => {
-    dispatch(sendPutRequest(data, params.pollId));
+    dispatch(updatePollAction({ data, pollId: params.pollId }));
   };
   useEffect(() => {
     fields.forEach((field) => {
@@ -57,7 +57,7 @@ function PollDetail() {
 
   useEffect(() => {
     if (params.pollId) {
-      dispatch(fetchDataPoll(params.pollId));
+      dispatch(fetchDataPollAction(params.pollId));
     }
   }, []);
   return (

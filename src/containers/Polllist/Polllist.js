@@ -15,8 +15,8 @@ import { StyledTable, CardTable } from "../../components/styles/styled";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setQuery,
-  deletePollRequest,
-  fetchDataPolllist,
+  deletePollAction,
+  fetchPolllistRequest,
   setPollId,
 } from "./reducer";
 
@@ -37,9 +37,8 @@ function Polllist() {
   };
   //Delete Poll
   const handleDeletePoll = () => {
-    dispatch(deletePollRequest());
+    dispatch(deletePollAction());
     setIsDeleteDialogOpen(false);
-    dispatch(fetchDataPolllist());
   };
   //Show poll detail when click on row
   const onRowClick = (event, rowData) => {
@@ -51,7 +50,7 @@ function Polllist() {
   const dataTable = polllistState.dataPolllistTable.map((row) => ({ ...row }));
 
   useEffect(() => {
-    dispatch(fetchDataPolllist());
+    dispatch(fetchPolllistRequest());
   }, [polllistState.query]);
 
   return (

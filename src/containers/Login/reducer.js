@@ -1,23 +1,11 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_SIGNIN } from "../../constants/api";
+import { createSlice } from "@reduxjs/toolkit";
 import { ADMIN_TOKEN } from "../../constants/localStorage";
+import { REQUEST_STATUS } from "../../constants/status";
 
 const initialState = {
   errorMessage: "",
+  loginStatus: REQUEST_STATUS.IDLE,
 };
-
-export const sendSignInRequest = createAsyncThunk(
-  "login/sendSignInRequest",
-  async (data, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(API_SIGNIN, data);
-      return response;
-    } catch (err) {
-      return rejectWithValue(err.response.data.message);
-    }
-  }
-);
 
 export const slice = createSlice({
   name: "login",
@@ -26,22 +14,25 @@ export const slice = createSlice({
     setErrorMessage: (state, action) => {
       state.errorMessage = action.payload;
     },
-  },
-  extraReducers: {
-    [sendSignInRequest.rejected]: (state, { payload }) => {
-      if (payload === "Incorrect username or password") {
-        state.errorMessage = "Email or password is invalid, please try again.";
-      } else state.errorMessage = "";
+    loginRequest: (state, action) => {
+      if (action) state.loginStatus = REQUEST_STATUS.REQUESTING;
     },
-    [sendSignInRequest.fulfilled]: (state, { payload }) => {
-      if (payload.status === 200) {
-        state.errorMessage = "";
-        sessionStorage.setItem(ADMIN_TOKEN, payload.data.token);
-      }
+    loginSuccess: (state, { payload: { token } }) => {
+      if (token) sessionStorage.setItem(ADMIN_TOKEN, token);
+      state.loginStatus = REQUEST_STATUS.SUCCESS;
+    },
+    loginFail: (state, { payload }) => {
+      state.loginStatus = REQUEST_STATUS.ERROR;
+      state.errorMessage = payload;
     },
   },
 });
 
-export const { setErrorMessage } = slice.actions;
+export const {
+  setErrorMessage,
+  loginRequest,
+  loginSuccess,
+  loginFail
+} = slice.actions;
 
 export default slice.reducer;

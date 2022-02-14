@@ -11,13 +11,15 @@ import {
   MuiButton,
 } from "../../components/styles/styled";
 import { useAppDispatch, useAppSelector } from "../../redux/consumeHook.ts";
-import { sendSignInRequest, setErrorMessage } from "./reducer";
+import { setErrorMessage, loginRequest } from "./reducer";
 import { useNavigate } from "react-router-dom";
 import clientPath from "../../constants/clientPath";
+import { REQUEST_STATUS } from "../../constants/status";
+import { ADMIN_TOKEN } from "../../constants/localStorage";
 
 function LogIn() {
   const dispatch = useAppDispatch();
-  const { errorMessage } = useAppSelector((state) => state.login);
+  const { errorMessage, loginStatus } = useAppSelector((state) => state.login);
   const navigate = useNavigate();
 
   const schema = Yup.object().shape({
@@ -34,14 +36,20 @@ function LogIn() {
     },
     resolver: yupResolver(schema),
   });
-  const onSubmit = (data) => {
-    //sendSignInRequest is a "asyncThunk"
-    dispatch(sendSignInRequest(data))
-      .unwrap() //must add unwrap(). If you not add, function in .then still call when request failed.
-      .then(() => {
-        navigate(clientPath.POLLLIST);
-      });
+  const checkAndNavigate = () => {
+    const token = sessionStorage.getItem(ADMIN_TOKEN);
+    if (token && loginStatus === REQUEST_STATUS.SUCCESS) {
+      navigate(clientPath.POLLLIST);
+    } else navigate(clientPath.LOGIN);
   };
+  const onSubmit = (data) => {
+    dispatch(loginRequest(data));
+  };
+
+  React.useEffect(() => {
+    checkAndNavigate();
+  }, [loginStatus]);
+
   return (
     <Wrapper>
       <Card>
