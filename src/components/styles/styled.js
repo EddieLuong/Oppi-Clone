@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { TextField, Button, Popper, Dialog } from "@material-ui/core";
-import MaterialTable from "material-table";
+import Table from "@mui/material/Table";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
 
 const Card = styled.div`
   padding: 20px;
@@ -81,7 +84,73 @@ const MuiTextfield = styled(TextField)({
     },
   },
 });
+const StyledTableCell = styled(TableCell)``;
 
+const StatusStyledTableCell = styled(StyledTableCell)`
+  div.statusCell {
+    background-color: ${(props) => {
+      if (props.status === "live") {
+        return "#ffc2c2";
+      }
+      if (props.status === "ended") {
+        return "#c1c0c0";
+      }
+    }};
+    color: ${(props) => {
+      if (props.status === "live") {
+        return "#ff4141";
+      }
+    }};
+    padding: 5px 10px;
+    margin-bottom: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    font-size: 12px;
+    height: 25px;
+    line-height: 15px;
+  }
+`;
+const StyledTableContainer = styled(TableContainer)`
+  &.MuiTableContainer-root {
+    box-shadow: none;
+  }
+  .action__Delete {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 6px 10px;
+    box-shadow: 0 3px 8px 0px rgb(0 0 0 / 15%);
+    background-color: #fff;
+    width: 121px;
+    height: 33px;
+    border: 0.8px solid #e1e1e1;
+    border-radius: 5px;
+    margin: 0;
+  }
+  .action__Delete__text {
+    margin: 0;
+  }
+  .action__Delete__DeleteIcon {
+    font-size: 1.3rem;
+  }
+`;
+const StyledTableRow = styled(TableRow)`
+  background-color: ${(props) => (props.index % 2 === 0 ? "#ecf5fd" : "#fff")};
+  & {
+    background-color: ${(props) => {
+      if (props.status === "ended") {
+        return "#d8d8d8";
+      }
+    }};
+  }
+  cursor: pointer;
+  border: 1px solid #fff;
+  &:hover {
+    border-left: 1px solid #42b5e8;
+  }
+`;
 const MuiButton = styled(Button)({
   "&.MuiButton-root": {
     border: "0px",
@@ -101,13 +170,10 @@ const MuiButton = styled(Button)({
       opacity: 0.8,
     },
   },
-  "&.MuiButton-text": {
-    // padding: "6px 0px",
-  },
 });
 
 const CardTable = styled.div`
-  width: 75%;
+  width: 76%;
   height: 95%;
   display: block;
   margin: 8% auto;
@@ -117,7 +183,14 @@ const CardTable = styled.div`
   border-radius: 1.85rem;
   box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
 `;
-const StyledTable = styled(MaterialTable)``;
+const StyledTable = styled(Table)`
+  .MuiTableCell-root {
+    font-family: "Montserrat", sans-serif;
+    color: #000;
+    padding: 12px 12px 8px;
+  }
+  overflow: hidden;
+`;
 
 const MButton = styled(Button)({
   "&.logout-Button": {
@@ -127,6 +200,7 @@ const MButton = styled(Button)({
     fontFamily: "inherit",
     textTransform: "none",
     padding: "15px 25px",
+    fontWeight: 600,
     "&:hover": {
       backgroundColor: "transparent",
     },
@@ -179,7 +253,6 @@ const DialogLogout = styled(Dialog)`
   .MuiDialog-paper {
     font-family: Montserrat;
   }
-  ,
   .btnLogout {
     text-transform: none;
   }
@@ -200,4 +273,8 @@ export {
   MButton,
   StyledPopper,
   DialogLogout,
+  StyledTableContainer,
+  StyledTableRow,
+  StatusStyledTableCell,
+  StyledTableCell,
 };

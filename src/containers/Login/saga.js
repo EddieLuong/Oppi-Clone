@@ -20,7 +20,10 @@ function* sendSignInRequest(data) {
   } catch (error) {
     if (error.response.data.message === "Incorrect username or password") {
       yield put(loginFail(invalidMessage));
-    } else yield put(setErrorMessage(""));
+    } else {
+      yield put(loginRequest());
+      yield put(setErrorMessage(""));
+    }
   }
 }
 
