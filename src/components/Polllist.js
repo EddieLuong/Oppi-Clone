@@ -7,7 +7,7 @@ import {
   Pagination,
 } from "@mui/material";
 import Header from "./Header";
-import { handleDataToTable, columns, ApiDelete } from "./Utils";
+import { handleDataToTable, ApiDelete } from "./Utils";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
@@ -30,6 +30,66 @@ function Polllist() {
     const rows = handleDataToTable(polllistArray);
     setDataPolllistTable(rows);
   };
+  const columns = [
+    {
+      title: "Poll Name",
+      field: "title",
+      cellStyle: {
+        wordWap: "break word",
+        width: "13%",
+        wordBreak: "break-all",
+      },
+    },
+    {
+      title: "Poll Question",
+      field: "question",
+      cellStyle: {
+        wordWap: "break word",
+        wordBreak: "break-all",
+        width: "22%",
+      },
+    },
+    {
+      title: "Start Date",
+      field: "startDate",
+      cellStyle: {
+        width: "12%",
+      },
+    },
+    {
+      title: "End Date",
+      field: "endDate",
+      cellStyle: {
+        width: "12%",
+      },
+    },
+    { title: "Participants", field: "participants", align: "center" },
+    {
+      title: "Status",
+      field: "status",
+      render: (rowdata) => (
+        <div
+          style={
+            rowdata.status === "live"
+              ? {
+                  backgroundColor: "#ffc2c2",
+                  color: "red",
+                  textTransform: "uppercase",
+                }
+              : {
+                  backgroundColor: "#c1c0c0",
+                  color: "#000",
+                  textTransform: "uppercase",
+                }
+          }
+          className="statusCell"
+        >
+          <p>{rowdata.status}</p>
+        </div>
+      ),
+      align: "center",
+    },
+  ];
   //Change page in Pagination: reset current page index and re-render polllist
   const handleChangePage = (page) => {
     setCurrentPage(page);

@@ -179,7 +179,7 @@ const DialogLogout = styled(Dialog)`
   .MuiDialog-paper {
     font-family: Montserrat;
   }
-  ,
+
   .btnLogout {
     text-transform: none;
   }
