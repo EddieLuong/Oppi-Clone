@@ -16,13 +16,13 @@ import {
   StyledTableContainer,
   StyledTableRow,
   StatusStyledTableCell,
-  StyledTableCell,
 } from "../../components/styles/styled";
 import { useSelector, useDispatch } from "react-redux";
 import TableBody from "@mui/material/TableBody";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import TableCell from "@mui/material/TableCell";
 
 import {
   setQuery,
@@ -52,9 +52,11 @@ function Polllist() {
     setIsDeleteDialogOpen(false);
   };
   //Show poll detail when click on row
-  const onRowClick = (pollId) => {
-    dispatch(setPollId(pollId));
-    navigate(`/poll-detail/${pollId}`);
+  const onRowClick = (row) => {
+    if (row.status !== "ended") {
+      dispatch(setPollId(row.id));
+      navigate(`/poll-detail/${row.id}`);
+    }
   };
 
   useEffect(() => {
@@ -71,13 +73,13 @@ function Polllist() {
           <StyledTable aria-label="simple table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>Poll Name</StyledTableCell>
-                <StyledTableCell>Poll Question</StyledTableCell>
-                <StyledTableCell align="center">Start Date</StyledTableCell>
-                <StyledTableCell align="center">End Date</StyledTableCell>
-                <StyledTableCell align="center">Participants</StyledTableCell>
-                <StyledTableCell align="center">Status</StyledTableCell>
-                <StyledTableCell align="center">Action</StyledTableCell>
+                <TableCell>Poll Name</TableCell>
+                <TableCell>Poll Question</TableCell>
+                <TableCell align="center">Start Date</TableCell>
+                <TableCell align="center">End Date</TableCell>
+                <TableCell align="center">Participants</TableCell>
+                <TableCell align="center">Status</TableCell>
+                <TableCell align="center">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -85,25 +87,19 @@ function Polllist() {
                 <StyledTableRow
                   key={row.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  onClick={() => onRowClick(row.id)}
+                  onClick={() => onRowClick(row)}
                   index={index}
                   status={row.status}
                 >
-                  <StyledTableCell>{row.title}</StyledTableCell>
-                  <StyledTableCell>{row.question}</StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.startDate}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.endDate}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {row.participants}
-                  </StyledTableCell>
+                  <TableCell style={{ width: "15%" }}>{row.title}</TableCell>
+                  <TableCell style={{ width: "30%" }}>{row.question}</TableCell>
+                  <TableCell align="center">{row.startDate}</TableCell>
+                  <TableCell align="center">{row.endDate}</TableCell>
+                  <TableCell align="center">{row.participants}</TableCell>
                   <StatusStyledTableCell status={row.status} align="center">
                     <div className="statusCell">{row.status.toUpperCase()}</div>
                   </StatusStyledTableCell>
-                  <StyledTableCell align="center">
+                  <TableCell align="center">
                     <div
                       onClick={(event) => {
                         setIsDeleteDialogOpen(true);
@@ -115,7 +111,7 @@ function Polllist() {
                       <DeleteIcon className="action__Delete__DeleteIcon" />
                       <p className="action__Delete__text">Delete</p>
                     </div>
-                  </StyledTableCell>
+                  </TableCell>
                 </StyledTableRow>
               ))}
             </TableBody>
