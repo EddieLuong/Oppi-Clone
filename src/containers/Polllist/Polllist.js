@@ -7,12 +7,23 @@ import {
   Pagination,
 } from "@mui/material";
 import Header from "../../components/Header";
-import { columns } from "../../components/Utils";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { StyledTable, CardTable } from "../../components/styles/styled";
+import {
+  StyledTable,
+  CardTable,
+  StyledTableContainer,
+  StyledTableRow,
+  StatusStyledTableCell,
+  StyledTableCell,
+} from "../../components/styles/styled";
 import { useSelector, useDispatch } from "react-redux";
+import TableBody from "@mui/material/TableBody";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+
 import {
   setQuery,
   deletePollAction,
@@ -41,13 +52,10 @@ function Polllist() {
     setIsDeleteDialogOpen(false);
   };
   //Show poll detail when click on row
-  const onRowClick = (event, rowData) => {
-    event.stopPropagation();
-    dispatch(setPollId(rowData.id));
-    navigate(`/poll-detail/${rowData.id}`);
+  const onRowClick = (pollId) => {
+    dispatch(setPollId(pollId));
+    navigate(`/poll-detail/${pollId}`);
   };
-  //map data to array before set to data Material prop
-  const dataTable = polllistState.dataPolllistTable.map((row) => ({ ...row }));
 
   useEffect(() => {
     dispatch(fetchPolllistRequest());
@@ -55,79 +63,64 @@ function Polllist() {
 
   return (
     <div className="pollist">
-      {/* Log out Section */}
+      {/* Header Section */}
       <Header />
       {/* Polllist Table */}
       <CardTable>
-        <StyledTable
-          columns={columns}
-          data={dataTable}
-          onRowClick={onRowClick}
-          options={{
-            toolbar: false,
-            paging: false,
-            actionsColumnIndex: -1,
-            sorting: false,
-            headerStyle: {
-              backgroundColor: "#fafafa",
-              color: "#23282C",
-              fontFamily: "Montserrat",
-              fontWeight: "600",
-            },
-            rowStyle: (row) => {
-              const styles = {
-                fontSize: 13.5,
-                height: 26,
-                color: "#23282C",
-                fontWeight: 400,
-                padding: "0 10px",
-              };
-              if (row.tableData.id % 2 !== 0) {
-                styles.backgroundColor = "#fff";
-              } else styles.backgroundColor = "#ecf5fd";
-              return styles;
-            },
-          }}
-          style={{ boxShadow: "none", marginTop: 50 }}
-          actions={[
-            {
-              icon: "delete",
-              tooltip: "Delete User",
-              onClick: (event, data) => {
-                alert(data);
-              },
-            },
-          ]}
-          components={{
-            Action: (props) => (
-              <div
-                className="boxAction"
-                style={{
-                  display: "inline-flex",
-                  width: 115,
-                  marginTop: "16px",
-                  marginRight: 10,
-                  justifyContent: "center",
-                  border: "0.8px solid #E1E1e1",
-                  padding: "3px 0",
-                  borderRadius: 4,
-                  backgroundColor: "#fff",
-                  alignItems: "center",
-                  boxShadow: "0 2px 4px rgb(0 0 0 / 20%)",
-                }}
-                onClick={(event) => {
-                  setIsDeleteDialogOpen(true);
-                  dispatch(setPollId(props.data.id));
-                  event.stopPropagation();
-                }}
-              >
-                <DeleteIcon style={{ fontSize: 16 }} />
-                <p>Delete</p>
-              </div>
-            ),
-          }}
-        ></StyledTable>
-        {/* //Pagination */}
+        <StyledTableContainer component={Paper}>
+          <StyledTable aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Poll Name</StyledTableCell>
+                <StyledTableCell>Poll Question</StyledTableCell>
+                <StyledTableCell align="center">Start Date</StyledTableCell>
+                <StyledTableCell align="center">End Date</StyledTableCell>
+                <StyledTableCell align="center">Participants</StyledTableCell>
+                <StyledTableCell align="center">Status</StyledTableCell>
+                <StyledTableCell align="center">Action</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {polllistState.dataPolllistTable.map((row, index) => (
+                <StyledTableRow
+                  key={row.id}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  onClick={() => onRowClick(row.id)}
+                  index={index}
+                  status={row.status}
+                >
+                  <StyledTableCell>{row.title}</StyledTableCell>
+                  <StyledTableCell>{row.question}</StyledTableCell>
+                  <StyledTableCell align="center">
+                    {row.startDate}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {row.endDate}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    {row.participants}
+                  </StyledTableCell>
+                  <StatusStyledTableCell status={row.status} align="center">
+                    <div className="statusCell">{row.status.toUpperCase()}</div>
+                  </StatusStyledTableCell>
+                  <StyledTableCell align="center">
+                    <div
+                      onClick={(event) => {
+                        setIsDeleteDialogOpen(true);
+                        dispatch(setPollId(row.id));
+                        event.stopPropagation();
+                      }}
+                      className="action__Delete"
+                    >
+                      <DeleteIcon className="action__Delete__DeleteIcon" />
+                      <p className="action__Delete__text">Delete</p>
+                    </div>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </StyledTable>
+        </StyledTableContainer>
       </CardTable>
       <Pagination
         className="pagination"

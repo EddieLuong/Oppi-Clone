@@ -15,7 +15,7 @@ export const slice = createSlice({
       state.errorMessage = action.payload;
     },
     loginRequest: (state, action) => {
-      if (action) state.loginStatus = REQUEST_STATUS.REQUESTING;
+      state.loginStatus = REQUEST_STATUS.REQUESTING;
     },
     loginSuccess: (state, { payload: { token } }) => {
       if (token) sessionStorage.setItem(ADMIN_TOKEN, token);
@@ -28,11 +28,7 @@ export const slice = createSlice({
   },
 });
 
-export const {
-  setErrorMessage,
-  loginRequest,
-  loginSuccess,
-  loginFail
-} = slice.actions;
+export const { setErrorMessage, loginRequest, loginSuccess, loginFail } =
+  slice.actions;
 
 export default slice.reducer;
