@@ -84,9 +84,8 @@ const MuiTextfield = styled(TextField)({
     },
   },
 });
-const StyledTableCell = styled(TableCell)``;
 
-const StatusStyledTableCell = styled(StyledTableCell)`
+const StatusStyledTableCell = styled(TableCell)`
   div.statusCell {
     background-color: ${(props) => {
       if (props.status === "live") {
@@ -138,17 +137,12 @@ const StyledTableContainer = styled(TableContainer)`
 `;
 const StyledTableRow = styled(TableRow)`
   background-color: ${(props) => (props.index % 2 === 0 ? "#ecf5fd" : "#fff")};
-  & {
-    background-color: ${(props) => {
-      if (props.status === "ended") {
-        return "#d8d8d8";
-      }
-    }};
-  }
   cursor: pointer;
   border: 1px solid #fff;
+  opacity: 1;
   &:hover {
     border-left: 1px solid #42b5e8;
+    opacity: 0.8;
   }
 `;
 const MuiButton = styled(Button)({
@@ -276,5 +270,4 @@ export {
   StyledTableContainer,
   StyledTableRow,
   StatusStyledTableCell,
-  StyledTableCell,
 };
