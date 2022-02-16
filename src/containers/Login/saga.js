@@ -11,7 +11,6 @@ import { STATUS_CODE } from "../../constants/status";
 const invalidMessage = "Email or password is invalid, please try again.";
 
 function* sendSignInRequest(data) {
-  console.log(data);
   try {
     const response = yield call(login, data.payload);
     if (response.status === STATUS_CODE.SUCCESS) {

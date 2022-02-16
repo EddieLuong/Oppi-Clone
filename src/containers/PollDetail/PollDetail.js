@@ -179,7 +179,6 @@ function PollDetail() {
                           maxDate={new Date(value)}
                           renderInput={(params) => (
                             <MuiTextfield
-                              id="zeropadding"
                               className="textfield labelDate"
                               variant="outlined"
                               {...params}
@@ -205,7 +204,6 @@ function PollDetail() {
                         renderInput={(params) => (
                           <MuiTextfield
                             className="textfield labelDate"
-                            id="zeropadding"
                             variant="outlined"
                             {...params}
                           />
@@ -251,7 +249,6 @@ function PollDetail() {
                   <MuiTextfield
                     disabled={dataPoll.isPublicResult}
                     className="textfield"
-                    id="zeropadding"
                     onChange={onChange}
                     value={value}
                     variant="outlined"

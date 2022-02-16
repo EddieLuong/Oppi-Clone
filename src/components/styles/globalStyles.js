@@ -6,12 +6,12 @@ const GlobalStyle = createGlobalStyle`
     padding:0;
     box-sizing: border-box;
     font-family: Montserrat!important;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     line-height:1.5;
   }
   html{
-    font-size: 16px;
+    font-size: 17px;
   }
   :root {
   --blue: #20a8d8;
@@ -75,7 +75,7 @@ const GlobalStyle = createGlobalStyle`
   .statusCell{
     padding: 3px 2px;
     border-radius: 1rem;
-    font-size: 12px;
+    font-size: 13px;
   }
   .statusCell p {
     margin-bottom:0;
@@ -127,7 +127,7 @@ const GlobalStyle = createGlobalStyle`
     box-shadow:none;
   }
   textarea.MuiInputBase-input{
-    font-size: 15px ;
+    font-size: 0.975rem ;
     font-family: Montserrat;
   }
   .textfield .PrivateNotchedOutline-root-1{
@@ -214,7 +214,7 @@ const GlobalStyle = createGlobalStyle`
     }
     button.btnUpdate{
     border: 0px;
-    font-size: 15px;
+    font-size: 0.975rem;
     margin: 0px;
     margin-top:30px;
     background-color: rgb(255, 176, 0);

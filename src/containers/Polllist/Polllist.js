@@ -136,7 +136,11 @@ function Polllist() {
         onClose={handleCloseDialogDelete}
       >
         <DialogContent>
-          <img className="imgDeletePoll" src="/img/black_man_meme.png" alt="" />
+          <img
+            className="imgDeletePoll"
+            src="/Oppi-Clone/img/black_man_meme.png"
+            alt=""
+          />
           <DialogContentText
             id="alert-dialog-description "
             className="align-center"

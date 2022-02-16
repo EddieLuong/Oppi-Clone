@@ -24,5 +24,4 @@ function ProtectedRoute({ children }) {
   return <Navigate to={clientPath.LOGIN} />;
 }
 
-
 export default ProtectedRoute;

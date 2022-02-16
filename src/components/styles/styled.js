@@ -7,8 +7,8 @@ import TableCell from "@mui/material/TableCell";
 
 const Card = styled.div`
   padding: 20px;
-  min-width: 390px;
-  min-height: 80vh;
+  min-width: 400px;
+  min-height: 75vh;
   display: flex;
   justify-content: space-around;
   flex-direction: column;
@@ -67,9 +67,10 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
 const MuiTextfield = styled(TextField)({
   "& .MuiOutlinedInput-root": {
-    padding: "12px",
+    fontFamily: "Montserrat",
     "& fieldset": {
       borderRadius: "10px",
       border: "2px solid rgb(240,241,240)",
@@ -189,6 +190,7 @@ const StyledTable = styled(Table)`
 const MButton = styled(Button)({
   "&.logout-Button": {
     backgroundColor: "transparent",
+    fontSize: "0.95rem",
     float: "right",
     color: "#1890ff",
     fontFamily: "inherit",
@@ -246,6 +248,7 @@ const DialogLogout = styled(Dialog)`
   .MuiButton-root,
   .MuiDialog-paper {
     font-family: Montserrat;
+    font-size: 0.975rem;
   }
   .btnLogout {
     text-transform: none;
