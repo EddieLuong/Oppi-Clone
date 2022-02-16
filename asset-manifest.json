@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/Oppi-Clone/static/css/main.25aa2eca.css",
-    "main.js": "/Oppi-Clone/static/js/main.29e36bde.js",
+    "main.js": "/Oppi-Clone/static/js/main.d249b258.js",
     "static/js/787.8ccfd2ac.chunk.js": "/Oppi-Clone/static/js/787.8ccfd2ac.chunk.js",
     "index.html": "/Oppi-Clone/index.html",
     "main.25aa2eca.css.map": "/Oppi-Clone/static/css/main.25aa2eca.css.map",
-    "main.29e36bde.js.map": "/Oppi-Clone/static/js/main.29e36bde.js.map",
+    "main.d249b258.js.map": "/Oppi-Clone/static/js/main.d249b258.js.map",
     "787.8ccfd2ac.chunk.js.map": "/Oppi-Clone/static/js/787.8ccfd2ac.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.25aa2eca.css",
-    "static/js/main.29e36bde.js"
+    "static/js/main.d249b258.js"
   ]
 }
